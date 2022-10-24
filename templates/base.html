@@ -32,6 +32,13 @@
   </head>
 
   <body>
+    <nav class="flex justify-between py-5 px-10 items-center bg-green-light shadow-lg shadow-green-dark/30">
+      <a class="text-green-dark text-[28px] font-bold hover:scale-110 transition-all cursor-pointer" href="/">don8</a>
+      <div class="flex gap-10 items-center text-green-medium font-bold">
+        <a class="hover:scale-110 transition-all cursor-pointer" href="/donations/">Donations</a>
+        <button class="text-brokenwhite bg-green-medium py-2 px-3 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50" onclick="location.href='/login/'">Login</button>
+      </div>
+    </nav>
     {% block content %} {% endblock content %}
   </body>
 </html>
