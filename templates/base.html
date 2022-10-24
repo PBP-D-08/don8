@@ -1,18 +1,36 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              green: {
+                dark: "#003E44",
+                medium: "#006D77",
+                light: "#83C5BE",
+              },
+              brokenwhite: "#EDF6F9",
+              orange: {
+                dark: "#CC6842",
+                medium: "#E29578",
+                light: "#FFDDD2",
+              },
+            },
+          },
+        },
+      };
+    </script>
+    {% block meta %} {% endblock meta %}
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="{% static 'css/style.css' %}">
-  {% block meta %}
-  {% endblock meta %}
-</head>
-
-<body>
-  {% block content %}
-  {% endblock content %}
-</body>
-
+  <body>
+    {% block content %} {% endblock content %}
+  </body>
 </html>
