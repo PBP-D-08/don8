@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from donation_app.models import Donation
+from homepage.models import Donation
 from authentication.models import User
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core import serializers
@@ -37,9 +37,15 @@ def update_money_accumulated(request, id):
 
     return
 
-# # mengambil data donasi dalam json by id
-# def get_donation_data(request, id):
-#     donation_data = Donation.objects.get(user=request.user, id=id) # ganti jd ambil data user buat cek wallet
-#     return HttpResponse(serializers.serialize("json", donation_data), content_type="application/json")
+def show_json(request):
+    donations = Donation.objects.all()
+    return HttpResponse(
+        serializers.serialize("json", donations), content_type="application/json"
+    )
+
+# mengambil data donasi dalam json by id
+def get_donation_data(request, id):
+    donation_data = Donation.objects.filter(id=id) # ganti jd ambil data user buat cek wallet
+    return HttpResponse(serializers.serialize("json", donation_data), content_type="application/json")
 
 

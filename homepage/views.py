@@ -26,8 +26,3 @@ def index(request):
     return render(request, "index.html")
 
 
-def show_json(request):
-    donations = Donation.objects.all()
-    return HttpResponse(
-        serializers.serialize("json", donations), content_type="application/json"
-    )
