@@ -1,0 +1,88 @@
+{% extends 'base.html' %} {% block meta %}
+<title>Registrasi Akun</title>
+{% endblock meta %} {% block content %}
+
+<div class="bg-brokenwhite">
+  <div
+    class="flex flex-col min-h-screen justify-center items-center max-w-[80%] md:max-w-[60%] mx-auto gap-5 text-green-dark"
+  >
+    <h1 class="text-3xl font-bold text-center">Registrasi</h1>
+    <form method="POST">
+      {% csrf_token %}
+      <div class="gap-5 text-left grid grid-cols-3 grid-rows-3">
+        <span class="after:content-['*'] after:text-red-500 w-full">
+          Username
+        </span>
+        <div class="col-span-2">
+          <input
+            type="text"
+            name="username"
+            placeholder="Username"
+            required
+            class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+          />
+        </div>
+
+        <span class="after:content-['*'] after:text-red-500 w-full">
+          Password
+        </span>
+        <div class="col-span-2">
+          <input
+            type="password"
+            name="password1"
+            placeholder="Password"
+            required
+            class="col-span-2 form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+          />
+        </div>
+
+        <span class="after:content-['*'] after:text-red-500">
+          Confirm Password
+        </span>
+        <div class="col-span-2">
+          <input
+            type="password"
+            name="password2"
+            placeholder="Password"
+            required
+            class="col-span-2 form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+          />
+        </div>
+
+        <span class="after:content-['*'] after:text-red-500"> Role </span>
+        <div class="col-span-2">
+          <select
+            name="role"
+            id="role"
+            required
+            class="col-span-2 form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+          >
+            <option value="user">Pengguna</option>
+            <option value="company">Perusahaan</option>
+          </select>
+        </div>
+
+        <input
+          data-mdb-ripple="true"
+          data-mdb-ripple-color="light"
+          class="col-span-3 w-full hover:shadow-lg hover:shadow-orange-light transition-all text-white bg-gradient-to-r from-orange-dark to-orange-medium hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+          type="submit"
+          value="Daftar"
+        />
+      </div>
+    </form>
+    <p>
+      Sudah mempunyai akun?
+      <a
+        href="{% url 'auth:login' %}"
+        class="font-bold text-green-medium underline hover:no-underline"
+        >Login</a
+      >
+    </p>
+    {% if messages %} {% for message in messages %}
+    <div class="mt-2 text-red-500 text-sm">{{ message }}</div>
+    {% endfor %} {% endif %}
+  </div>
+</div>
+
+{% endblock content %}
