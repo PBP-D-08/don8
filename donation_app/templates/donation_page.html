@@ -24,7 +24,7 @@
         //     ).value;
 
         //     $.ajax({
-        //         url: "{% url 'donation_app:update-money-accumulated' 0 %}".replace('0', id),
+        //         
         //         type: 'PUT',
         //         headers: { 'X-CSRFToken': csrftoken }, // give CSRF token to the header
         //         mode: 'same-origin', // Do not send CSRF token to another domain.
@@ -104,7 +104,7 @@
     </div>
 
     <div>
-        {% for data in donation_data %}
+        {% for data in donation %}
         <div>
             {{data.user}}
             {{data.title}}
@@ -116,7 +116,7 @@
             </div>
         </div>
 
-        {% endfor}
+        {% endfor %}
     </div>
 
-    {% endblock content %}
+{% endblock content %}

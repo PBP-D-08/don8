@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from donation_app.models import Donation
-# from 
+from authentication.models import User
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core import serializers
 from django.urls import reverse
@@ -10,18 +10,25 @@ from django.urls import reverse
 def show_donation_page(request, id):
 
     context = {
-        "donation_data": Donation.objects.get(id=id)
+        "donation": Donation.objects.get(id=id)
     }
-    return render(request, "donation_page", context)
+    return render(request, "donation_page.html", context)
 
 # fungsi buat update wallet user dan cek apakah mencukupi atau tidak
 def make_donation(request, id):
 
     if request.method == "POST":
-        # user_data = User.objects.get(user = request.user)
-
+        user = User.objects.get(user = request.user)
+        donation = Donation.objects.get(id=id)
         money_accumulated = int(request.POST.get("money_accumulated"))
-        Donation.objects.get(id=id).update(money_accumulated=money_accumulated)
+
+        if user.balance - money_accumulated >= 0:
+
+            Donation.objects.get(id=id).update(money_accumulated = donation.money_accumulated + money_accumulated)
+            User.objects.get(user = request.user).update(balance = user.balance - money_accumulated)
+        else:
+            #message
+            ...
 
         # return HttpResponseRedirect(reverse("donation_app:show_donation_page"))
     
