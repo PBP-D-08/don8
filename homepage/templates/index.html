@@ -1,6 +1,57 @@
 {% extends 'base.html' %} {% load static %} {% block meta %}
 <title>Don8</title>
 {% endblock meta %} {% block content %}
+<script>
+  $(document).ready(() => {
+    const card = data => `
+    <div
+      class="rounded-lg shadow-lg bg-green-medium py-4 px-3 hover:scale-105 transition-all"
+    >
+      <div class="max-w-[250px] min-h-[150px] text-center text-brokenwhite">
+        <div
+          class="w-[250px] h-[150px] rounded bg-cover bg-center"
+          style="
+            background-image: url(${data.fields.image_url});
+          "
+        ></div>
+        <p class="font-bold text-orange-light mt-4">${data.fields.title}</p>
+        <p class="font-bold">
+          <span class="text-orange-light">Rp</span> ${
+            data.fields.money_accumulated
+          }
+          <span class="text-orange-light font-normal text-xs">terkumpul</span>
+        </p>
+        <div class="h-3 bg-brokenwhite rounded-full mt-4">
+          <div class="h-3 bg-orange-medium rounded-full w-[${
+            (100 * data.fields.money_accumulated) / data.fields.money_needed
+          }%]"></div>
+        </div>
+        <button
+          class="text-orange-dark font-bold bg-orange-light py-2 px-3 mt-4 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50"
+          onclick="location.href='/donation/${data.pk}'"
+        >
+          Donasi
+        </button>
+      </div>
+    </div>`;
+
+    const render = data => {
+      const cards = data.map(card).join("");
+      $("#donations-card").html(cards);
+    };
+
+    $.ajax({
+      url: "/donation",
+      type: "GET",
+      success: data => {
+        render(data);
+      },
+      error: err => {
+        console.log(err);
+      },
+    });
+  });
+</script>
 <div class="bg-brokenwhite min-h-screen">
   <div
     class="max-w-[80%] mx-auto min-h-screen flex items-center justify-between gap-10"
@@ -45,34 +96,11 @@
     <h1 class="text-green-dark text-[50px] font-bold mb-10 text-center">
       Donations
     </h1>
-    <div class="flex flex-wrap items-center justify-center gap-10">
+    <div
+      class="flex flex-wrap items-center justify-center gap-10"
+      id="donations-card"
+    >
       <!-- start card -->
-      <div
-        class="rounded-lg shadow-lg bg-green-medium py-4 px-3 hover:scale-105 transition-all"
-      >
-        <div class="max-w-[250px] min-h-[150px] text-center text-brokenwhite">
-          <div
-            class="w-[250px] h-[150px] rounded bg-cover bg-center"
-            style="
-              background-image: url(https://divedigital.id/wp-content/uploads/2022/10/Gambar-Denji-Chainsaw-Man.jpg);
-            "
-          ></div>
-          <p class="font-bold text-orange-light mt-4">Judul</p>
-          <p class="font-bold">
-            <span class="text-orange-light">Rp</span> 500.500.500
-            <span class="text-orange-light font-normal text-xs">terkumpul</span>
-          </p>
-          <div class="h-3 bg-brokenwhite rounded-full mt-4">
-            <div class="h-3 bg-orange-medium rounded-full w-[30%]"></div>
-          </div>
-          <button
-            class="text-orange-dark font-bold bg-orange-light py-2 px-3 mt-4 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50"
-            onclick="location.href='/donations/id'"
-          >
-            Donasi
-          </button>
-        </div>
-      </div>
       <!-- end card -->
     </div>
   </div>
@@ -83,23 +111,21 @@
     id="defaultModal"
     tabindex="-1"
     aria-hidden="true"
-    class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full justify-center items-center"
+    class="w-full fixed flex justify-center w-full z-10 min-h-screen items-center bg-green-dark bg-opacity-50 hidden md:inset-0 h-modal md:h-full"
   >
     <div class="relative p-4 w-full max-w-2xl h-full md:h-auto">
       <!-- Modal content -->
       <form method="POST" id="post-form">
         {% csrf_token %}
-        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+        <div class="relative bg-brokenwhite rounded-lg shadow">
           <!-- Modal header -->
-          <div
-            class="flex justify-between items-start p-4 rounded-t border-b dark:border-gray-600"
-          >
-            <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+          <div class="flex justify-between items-start p-4 rounded-t border-b">
+            <h3 class="text-xl font-semibold text-gray-900">
               Create new donation
             </h3>
             <button
               type="button"
-              class="classtutup text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+              class="classtutup text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
               data-modal-toggle="defaultModal"
             >
               <svg
@@ -133,7 +159,7 @@
               </div>
               <div class="md:w-2/3">
                 <input
-                  class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+                  class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-brokenwhite focus:border-green-medium"
                   id="title"
                   type="text"
                 />
@@ -151,7 +177,7 @@
               </div>
               <div class="md:w-2/3">
                 <input
-                  class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+                  class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-brokenwhite focus:border-green-medium"
                   id="description"
                   type="text"
                 />
@@ -169,7 +195,7 @@
               </div>
               <div class="md:w-2/3">
                 <input
-                  class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+                  class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-brokenwhite focus:border-green-medium"
                   id="date_expired"
                   type="date"
                 />
@@ -187,7 +213,7 @@
               </div>
               <div class="md:w-2/3">
                 <input
-                  class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+                  class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-brokenwhite focus:border-green-medium"
                   id="image_url"
                   type="text"
                 />
@@ -197,7 +223,7 @@
 
           <!-- Modal footer -->
           <div
-            class="flex items-center p-6 space-x-2 rounded-b border-t border-gray-200 dark:border-gray-600"
+            class="flex items-center justify-center p-6 space-x-2 rounded-b border-t border-gray-200"
           >
             <button
               data-modal-toggle="defaultModal"
@@ -209,7 +235,7 @@
             <button
               data-modal-toggle="defaultModal"
               type="button"
-              class="classtutup text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+              class="classtutup text-white bg-orange-medium transition-all rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:scale-110 focus:z-10"
             >
               Cancel
             </button>
@@ -221,12 +247,11 @@
   <!-- end modal -->
 </div>
 <script>
-  const openModal = (e) => {
+  const openModal = e => {
     $("#defaultModal").removeClass("hidden");
   };
 
-  const closeModal = (e) => {
-    // e.preventDefault(); // prevent refresh
+  const closeModal = e => {
     $("#defaultModal").addClass("hidden");
   };
 
@@ -236,7 +261,7 @@
   $(document).on("submit", "#post-form", function (e) {
     $.ajax({
       type: "POST",
-      url: '/',
+      url: "/",
       data: {
         title: $("#title").val(),
         description: $("#description").val(),
@@ -247,6 +272,5 @@
       },
     });
   });
-  
 </script>
 {% endblock content %}
