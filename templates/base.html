@@ -31,12 +31,89 @@
     {% block meta %} {% endblock meta %}
   </head>
 
+  <script>
+    // check if user is logged in
+    $(document).ready(function () {
+      $.ajax({
+        url: "{% url 'auth:check_login' %}",
+        type: "GET",
+        success: response => {
+          // console.log(response.is_login);
+          if (response.is_login) {
+            $("#login").hide();
+            $("#logout").show();
+            $("#profile").show();
+
+            // profile change innerhtml
+            $("#profile").html(response.username);
+            // TODO: Ganti sesuai Task no 3
+            $("#profile").attr("href", "/profile/" + response.username);
+
+            // check if role is user
+            if (response.role == 1) {
+              $("#donation-history").show();
+              // donation history juga ganti attribute hrefnya
+              
+              $("#create-donation").hide();
+              // create donation juga ganti attribute hrefnya
+            } else {
+              $("#donation-history").hide();
+              $("#create-donation").show();
+            }
+          } else {
+            $("#login").show();
+            $("#logout").hide();
+            $("#profile").hide();
+            $("#donation-history").hide();
+            $("#create-donation").hide();
+          }
+        },
+      });
+    });
+  </script>
+
   <body>
-    <nav class="fixed flex w-full justify-between py-5 px-10 items-center bg-green-light shadow-lg shadow-green-dark/30">
-      <a class="text-green-dark text-[28px] font-bold hover:scale-110 transition-all cursor-pointer" href="/">don8</a>
+    <nav
+      class="fixed flex w-full justify-between py-5 px-10 items-center bg-green-light shadow-lg shadow-green-dark/30"
+    >
+      <a
+        class="text-green-dark text-[28px] font-bold hover:scale-110 transition-all cursor-pointer"
+        href="/"
+        >don8</a
+      >
       <div class="flex gap-10 items-center text-green-medium font-bold">
-        <a class="hover:scale-110 transition-all cursor-pointer" href="/donations/">Donations</a>
-        <button class="text-brokenwhite bg-green-medium py-2 px-3 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50" onclick="location.href='/login/'">Login</button>
+        <a
+          id="donation-history"
+          class="hover:scale-110 transition-all cursor-pointer"
+          href="/donations-history/"
+          >Donation History</a
+        >
+        <a
+          id="create-donation"
+          class="hover:scale-110 transition-all cursor-pointer"
+          href="/create-donation/"
+          >Create Donation</a
+        >
+        <button
+          id="login"
+          class="text-brokenwhite bg-green-medium py-2 px-3 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50"
+          onclick="location.href='/auth/login/'"
+        >
+          Login
+        </button>
+        <a
+          a
+          id="profile"
+          href=""
+          class="hover:scale-110 transition-all cursor-pointer border-2 border-green-medium bg-brokenwhite p-2 rounded-full hover:shadow-md transition-all hover:shadow-brokenwhite/50"
+        ></a>
+        <button
+          id="logout"
+          class="text-brokenwhite bg-green-medium py-2 px-3 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50"
+          onclick="location.href='/auth/logout/'"
+        >
+          Logout
+        </button>
       </div>
     </nav>
     {% block content %} {% endblock content %}
