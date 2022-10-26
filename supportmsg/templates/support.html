@@ -1,0 +1,13 @@
+{% extends 'base.html' %} {% load static %} {% block meta %}
+<title>Don8</title>
+{% endblock meta %} {% block content %}
+<div class="bg-brokenwhite min-h-screen">
+    <div class="p-32">
+        <button id="create_post"
+            class="text-brokenwhite bg-green-medium py-2 px-3 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50"
+            onclick="location.href='/auth/login/'">
+            Give Support
+          </button>
+    </div>
+</div>
+{% endblock content %}
