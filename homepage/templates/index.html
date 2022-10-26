@@ -1,6 +1,55 @@
 {% extends 'base.html' %} {% load static %} {% block meta %}
 <title>Don8</title>
 {% endblock meta %} {% block content %}
+<script>
+  $(document).ready(() => {
+    const card = data => `
+    <div
+      class="rounded-lg shadow-lg bg-green-medium py-4 px-3 hover:scale-105 transition-all"
+    >
+      <div class="max-w-[250px] min-h-[150px] text-center text-brokenwhite">
+        <div
+          class="w-[250px] h-[150px] rounded bg-cover bg-center"
+          style="
+            background-image: url(${data.image});
+          "
+        ></div>
+        <p class="font-bold text-orange-light mt-4">${data.title}</p>
+        <p class="font-bold">
+          <span class="text-orange-light">Rp</span> ${data.money_accumulated}
+          <span class="text-orange-light font-normal text-xs">terkumpul</span>
+        </p>
+        <div class="h-3 bg-brokenwhite rounded-full mt-4">
+          <div class="h-3 bg-orange-medium rounded-full w-[${
+            (100 * data.money_accumulated) / data.money_needed
+          }%]"></div>
+        </div>
+        <button
+          class="text-orange-dark font-bold bg-orange-light py-2 px-3 mt-4 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50"
+          onclick="location.href='/donation/${data.id}'"
+        >
+          Donasi
+        </button>
+      </div>
+    </div>`;
+
+    const render = data => {
+      const cards = data.map(card).join("");
+      $("#cards").html(cards);
+    };
+
+    $.ajax({
+      url: "/donation",
+      type: "GET",
+      success: data => {
+        render(data);
+      },
+      error: err => {
+        console.log(err);
+      },
+    });
+  });
+</script>
 <div class="bg-brokenwhite min-h-screen">
   <div
     class="max-w-[80%] mx-auto min-h-screen flex items-center justify-between gap-10"
