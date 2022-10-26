@@ -11,22 +11,24 @@
         <div
           class="w-[250px] h-[150px] rounded bg-cover bg-center"
           style="
-            background-image: url(${data.image});
+            background-image: url(${data.fields.image_url});
           "
         ></div>
-        <p class="font-bold text-orange-light mt-4">${data.title}</p>
+        <p class="font-bold text-orange-light mt-4">${data.fields.title}</p>
         <p class="font-bold">
-          <span class="text-orange-light">Rp</span> ${data.money_accumulated}
+          <span class="text-orange-light">Rp</span> ${
+            data.fields.money_accumulated
+          }
           <span class="text-orange-light font-normal text-xs">terkumpul</span>
         </p>
         <div class="h-3 bg-brokenwhite rounded-full mt-4">
           <div class="h-3 bg-orange-medium rounded-full w-[${
-            (100 * data.money_accumulated) / data.money_needed
+            (100 * data.fields.money_accumulated) / data.fields.money_needed
           }%]"></div>
         </div>
         <button
           class="text-orange-dark font-bold bg-orange-light py-2 px-3 mt-4 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50"
-          onclick="location.href='/donation/${data.id}'"
+          onclick="location.href='/donation/${data.pk}'"
         >
           Donasi
         </button>
@@ -35,7 +37,8 @@
 
     const render = data => {
       const cards = data.map(card).join("");
-      $("#cards").html(cards);
+      console.log(cards);
+      $("#donations-card").html(cards);
     };
 
     $.ajax({
@@ -94,34 +97,11 @@
     <h1 class="text-green-dark text-[50px] font-bold mb-10 text-center">
       Donations
     </h1>
-    <div class="flex flex-wrap items-center justify-center gap-10">
+    <div
+      class="flex flex-wrap items-center justify-center gap-10"
+      id="donations-card"
+    >
       <!-- start card -->
-      <div
-        class="rounded-lg shadow-lg bg-green-medium py-4 px-3 hover:scale-105 transition-all"
-      >
-        <div class="max-w-[250px] min-h-[150px] text-center text-brokenwhite">
-          <div
-            class="w-[250px] h-[150px] rounded bg-cover bg-center"
-            style="
-              background-image: url(https://divedigital.id/wp-content/uploads/2022/10/Gambar-Denji-Chainsaw-Man.jpg);
-            "
-          ></div>
-          <p class="font-bold text-orange-light mt-4">Judul</p>
-          <p class="font-bold">
-            <span class="text-orange-light">Rp</span> 500.500.500
-            <span class="text-orange-light font-normal text-xs">terkumpul</span>
-          </p>
-          <div class="h-3 bg-brokenwhite rounded-full mt-4">
-            <div class="h-3 bg-orange-medium rounded-full w-[30%]"></div>
-          </div>
-          <button
-            class="text-orange-dark font-bold bg-orange-light py-2 px-3 mt-4 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50"
-            onclick="location.href='/donations/id'"
-          >
-            Donasi
-          </button>
-        </div>
-      </div>
       <!-- end card -->
     </div>
   </div>
@@ -203,20 +183,17 @@
     </div>
   </div>
   <!-- end modal -->
-
 </div>
-<script>   
+<script>
+  const openModal = e => {
+    $("#defaultModal").removeClass("hidden");
+  };
 
-const openModal = e => {
-  $("#defaultModal").removeClass("hidden");
-};
+  const closeModal = e => {
+    $("#defaultModal").addClass("hidden");
+  };
 
-const closeModal = e => {
-  $("#defaultModal").addClass("hidden");
-};
-
-$("#create-donation").click(openModal);
-$(".classtutup").click(closeModal);
-
+  $("#create-donation").click(openModal);
+  $(".classtutup").click(closeModal);
 </script>
 {% endblock content %}
