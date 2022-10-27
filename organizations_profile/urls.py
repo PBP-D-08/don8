@@ -1,7 +1,7 @@
 from django.urls import path
 from organizations_profile.views import organizations_profile, show_json
 
-app_name = "org"
+app_name = "profile/org"
 
 urlpatterns = [
     path("<str:id>/", organizations_profile, name="organizations_profile"),

@@ -55,12 +55,12 @@
               
               $("#create-donation").hide();
               // create donation juga ganti attribute hrefnya
-              $("#profile").attr("href", "/user/" + response.username);
+              $("#profile").attr("href", "profile/user/" + response.username);
 
             } else {
               $("#donation-history").hide();
               $("#create-donation").show();
-              $("#profile").attr("href", "/org/" + response.username);
+              $("#profile").attr("href", "profile/org/" + response.username);
             }
           } else {
             $("#login").show();
