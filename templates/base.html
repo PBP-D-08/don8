@@ -47,7 +47,6 @@
             // profile change innerhtml
             $("#profile").html(response.username);
             // TODO: Ganti sesuai Task no 3
-            $("#profile").attr("href", "/profile/" + response.username);
 
             // check if role is user
             if (response.role == 1) {
@@ -56,9 +55,12 @@
               
               $("#create-donation").hide();
               // create donation juga ganti attribute hrefnya
+              $("#profile").attr("href", "/user/" + response.username);
+
             } else {
               $("#donation-history").hide();
               $("#create-donation").show();
+              $("#profile").attr("href", "/org/" + response.username);
             }
           } else {
             $("#login").show();
