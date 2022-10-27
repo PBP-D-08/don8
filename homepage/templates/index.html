@@ -5,7 +5,7 @@
   $(document).ready(() => {
     const card = data => `
     <div
-      class="rounded-lg shadow-lg bg-green-medium py-4 px-3 hover:scale-105 transition-all"
+      class="rounded-lg shadow-lg hover:shadow-xl hover:shadow-green-light bg-green-medium py-4 px-3 hover:scale-105 transition-all"
     >
       <div class="max-w-[250px] min-h-[150px] text-center text-brokenwhite">
         <div
@@ -65,7 +65,7 @@
         menggalang dana dan masyarakat umum untuk melakukan donasi.
       </p>
       <button
-        class="text-brokenwhite bg-green-medium py-4 px-5 rounded-lg hover:scale-110 hover:shadow-lg transition-all hover:shadow-gree-medium/70 text-[25px]"
+        class="text-brokenwhite  bg-gradient-to-r from-green-dark to-green-medium py-4 px-5 rounded-lg hover:scale-110 hover:shadow-lg transition-all hover:shadow-gree-medium/70 text-[25px]"
         onclick="const offset=document.getElementById('donations')?.offsetTop; window.scrollTo({top: offset===undefined?offset:offset-50, behavior:'smooth'})"
       >
         <div class="flex items-center gap-3">
