@@ -74,7 +74,7 @@
 
   <body>
     <nav
-      class="fixed flex w-full justify-between py-5 px-10 items-center bg-green-light shadow-lg shadow-green-dark/30"
+      class="fixed flex w-full justify-between py-5 px-10 items-center bg-green-light shadow-lg shadow-green-dark/30 z-10"
     >
       <a
         class="text-green-dark text-[28px] font-bold hover:scale-110 transition-all cursor-pointer"
@@ -95,7 +95,7 @@
         >
         <button
           id="login"
-          class="text-brokenwhite bg-green-medium py-2 px-3 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50"
+          class="text-brokenwhite bg-gradient-to-r from-green-dark to-green-medium py-2 px-3 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50"
           onclick="location.href='/auth/login/'"
         >
           Login
@@ -104,11 +104,11 @@
           a
           id="profile"
           href=""
-          class="hover:scale-110 transition-all cursor-pointer border-2 border-green-medium bg-brokenwhite p-2 rounded-full hover:shadow-md transition-all hover:shadow-brokenwhite/50"
+          class="hover:scale-110 transition-all cursor-pointer border-2 border-green-medium bg-gradient-to-r from-green-light to-brokenwhite p-2 rounded-full hover:shadow-md transition-all hover:shadow-brokenwhite/50"
         ></a>
         <button
           id="logout"
-          class="text-brokenwhite bg-green-medium py-2 px-3 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50"
+          class="text-brokenwhite bg-gradient-to-r from-green-dark to-green-medium py-2 px-3 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50"
           onclick="location.href='/auth/logout/'"
         >
           Logout
@@ -116,5 +116,6 @@
       </div>
     </nav>
     {% block content %} {% endblock content %}
+    {% include 'footer.html' %}
   </body>
 </html>
