@@ -4,29 +4,30 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
-from django.contrib.auth.decorators import login_required
+from authentication.forms import RegisterForm
 import datetime
 
 # Create your views here.
 
 
 def register(request):
+    form = RegisterForm()
     if request.method == "POST":
-        username = request.POST.get("username")
-        password1 = request.POST.get("password1")
-        password2 = request.POST.get("password2")
-        role = request.POST.get("role")
-        if User.objects.filter(username=username).exists():
-            messages.info(request, "Username already exists")
-        elif password1 == password2:
-            user = User.objects.create_user(username=username, password=password1)
-            user.role = User.USER if role == "user" else User.COMPANY
-            user.save()
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get("username")
+            password = form.cleaned_data.get("password1")
+            role = form.cleaned_data.get("role")
+            User.objects.create_user(
+                username=username,
+                password=password,
+                role=User.USER if role == "user" else User.COMPANY,
+            )
             messages.success(request, "Akun berhasil dibuat")
             return redirect("auth:login")
         else:
-            messages.info(request, "Password tidak sama")
-    return render(request, "register.html")
+            messages.error(request, form.errors)
+    return render(request, "register.html", {"form": form})
 
 
 def login_role(request):

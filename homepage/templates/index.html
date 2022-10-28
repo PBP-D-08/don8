@@ -54,10 +54,10 @@
 </script>
 <div class="bg-brokenwhite min-h-screen">
   <div
-    class="max-w-[80%] mx-auto min-h-screen flex items-center justify-between gap-10"
+    class="max-w-[80%] mx-auto min-h-screen flex flex-col-reverse md:flex-row items-center justify-center md:justify-between gap-5 pt-10 md:pt-0 md:gap-10"
   >
-    <div>
-      <h1 class="font-bold text-green-dark text-[100px]">Don8</h1>
+    <div class="text-center md:text-left">
+      <h1 class="font-bold text-green-dark text-[50px] md:text-[100px]">Don8</h1>
       <p class="text-green-dark mb-[30px] text-justify">
         Sebuah platform donasi online yang menghubungkan donatur dengan
         organisasi, dimana organisasi dapat mendaftarkan kegiatan penggalangan
@@ -69,14 +69,14 @@
         onclick="const offset=document.getElementById('donations')?.offsetTop; window.scrollTo({top: offset===undefined?offset:offset-50, behavior:'smooth'})"
       >
         <div class="flex items-center gap-3">
-          <p>Donate Sekarang</p>
+          <p class="text-sm md:text-lg">Donate Sekarang</p>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
             stroke-width="1.5"
             stroke="currentColor"
-            class="w-6 h-6"
+            class="w-6 h-6 animate-bounce"
           >
             <path
               stroke-linecap="round"
