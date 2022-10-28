@@ -33,7 +33,7 @@
 
   <script>
     // check if user is logged in
-    $(document).ready(function () {
+    $(document).ready(() => {
       $.ajax({
         url: "{% url 'auth:check_login' %}",
         type: "GET",
@@ -51,19 +51,24 @@
 
             // check if role is user
             if (response.role == 1) {
+              $("#saved-donation").show();
+              $("#saved-donation").attr("href", "/saved/" + response.username);
+
               $("#donation-history").show();
               // donation history juga ganti attribute hrefnya
-              
+
               $("#create-donation").hide();
               // create donation juga ganti attribute hrefnya
             } else {
               $("#donation-history").hide();
+              $("#saved-donation").hide();
               $("#create-donation").show();
             }
           } else {
             $("#login").show();
             $("#logout").hide();
             $("#profile").hide();
+            $("#saved-donation").hide();
             $("#donation-history").hide();
             $("#create-donation").hide();
           }
@@ -88,6 +93,25 @@
           href="/donations-history/"
           >Donation History</a
         >
+        <a
+          id="saved-donation"
+          class="hover:scale-110 transition-all cursor-pointer"
+          href="/"
+          ><svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z"
+            />
+          </svg>
+        </a>
         <span
           id="create-donation"
           class="hover:scale-110 transition-all cursor-pointer"
@@ -115,7 +139,6 @@
         </button>
       </div>
     </nav>
-    {% block content %} {% endblock content %}
-    {% include 'footer.html' %}
+    {% block content %} {% endblock content %} {% include 'footer.html' %}
   </body>
 </html>
