@@ -11,7 +11,7 @@
       {% csrf_token %}
       <div class="gap-5 text-left grid grid-cols-3 grid-rows-3">
         <span class="after:content-['*'] after:text-red-500 w-full">
-          Username
+          {{ form.username.label }}
         </span>
         <div class="col-span-2">
           <input
@@ -21,10 +21,15 @@
             required
             class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
           />
+          {% if form.username.errors %}
+          <div class="mt-2 text-red-500 text-sm w-full">
+            {{ form.username.errors }}
+          </div>
+          {% endif %}
         </div>
 
         <span class="after:content-['*'] after:text-red-500 w-full">
-          Password
+          {{ form.password1.label }}
         </span>
         <div class="col-span-2">
           <input
@@ -34,10 +39,15 @@
             required
             class="col-span-2 form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
           />
+          {% if form.password1.errors %}
+          <div class="mt-2 text-red-500 text-sm w-full">
+            {{ form.password1.errors }}
+          </div>
+          {% endif %}
         </div>
 
         <span class="after:content-['*'] after:text-red-500">
-          Confirm Password
+          {{ form.password2.label }}
         </span>
         <div class="col-span-2">
           <input
@@ -47,9 +57,16 @@
             required
             class="col-span-2 form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
           />
+          {% if form.password2.errors %}
+          <div class="mt-2 text-red-500 text-sm w-full">
+            {{ form.password2.errors }}
+          </div>
+          {% endif %}
         </div>
 
-        <span class="after:content-['*'] after:text-red-500"> Role </span>
+        <span class="after:content-['*'] after:text-red-500">
+          {{ form.role.label }}
+        </span>
         <div class="col-span-2">
           <select
             name="role"
@@ -60,6 +77,11 @@
             <option value="user">Pengguna</option>
             <option value="company">Perusahaan</option>
           </select>
+          {% if form.role.errors %}
+          <div class="mt-2 text-red-500 text-sm w-full">
+            {{ form.role.errors }}
+          </div>
+          {% endif %}
         </div>
 
         <input
