@@ -1,10 +1,10 @@
 from django.http import HttpResponse
 from django.shortcuts import render
-from authentication.views import login_role
 from saved.models import SavedDonation
-from django.core import serializers
 from django.contrib.auth.decorators import login_required
 from authentication.models import User
+from django.core.serializers.json import DjangoJSONEncoder
+import json
 
 # Create your views here.
 @login_required(login_url="/login/")
@@ -20,7 +20,25 @@ def show_json(request, username):
         return HttpResponse("You are not authorized to view this page.")
     saved_donations = SavedDonation.objects.filter(user__username=username)
     donations = [sd.donation for sd in saved_donations]
-    data = serializers.serialize("json", donations)
+    donations_dict = []
+    for d in donations:
+        donations_dict.append(
+            {
+                "pk": d.pk,
+                "fields": {
+                    "title": d.title,
+                    "description": d.description,
+                    "date_expired": d.date_expired,
+                    "image_url": d.image_url,
+                    "date_created": d.date_created,
+                    "money_needed": d.money_needed,
+                    "money_accumulated": d.money_accumulated,
+                    "is_saved": True,
+                    "curr_role": request.user.role,
+                },
+            }
+        )
     return HttpResponse(
-        serializers.serialize("json", donations), content_type="application/json"
+        json.dumps(donations_dict, indent=1, cls=DjangoJSONEncoder),
+        content_type="application/json",
     )
