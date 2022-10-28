@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     "homepage",
     "authentication",
     "saved",
-    "rest_framework",
 ]
 
 AUTH_USER_MODEL = "authentication.User"
