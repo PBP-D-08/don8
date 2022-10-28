@@ -1,0 +1,88 @@
+{% extends 'base.html' %} {% load static %} {% block meta %}
+<title>Saved</title>
+{% endblock meta %} {% block content %}
+<div class="bg-brokenwhite min-h-screen">
+  <div class="max-w-[80%] mx-auto min-h-screen py-28" id="donations">
+    <div
+      class="flex gap-5 items-center justify-center text-green-dark text-[30px] md:text-[50px] font-bold mb-10 text-center"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        class="w-8 h-8"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M6.32 2.577a49.255 49.255 0 0111.36 0c1.497.174 2.57 1.46 2.57 2.93V21a.75.75 0 01-1.085.67L12 18.089l-7.165 3.583A.75.75 0 013.75 21V5.507c0-1.47 1.073-2.756 2.57-2.93z"
+          clip-rule="evenodd"
+        />
+      </svg>
+      <span> Saved Donations </span>
+    </div>
+    <div
+      class="flex flex-wrap items-center justify-center gap-10"
+      id="saved-card"
+    >
+      <!-- start card -->
+      <!-- end card -->
+    </div>
+  </div>
+</div>
+
+<script>
+  const username = $(location).attr("pathname").split("/")[2];
+
+  const card = data => `
+  <div
+    class="rounded-lg shadow-lg hover:shadow-xl hover:shadow-green-light bg-green-medium py-4 px-3 hover:scale-105 transition-all"
+  >
+    <div class="max-w-[250px] min-h-[150px] text-center text-brokenwhite">
+      <div
+        class="w-[250px] h-[150px] rounded bg-cover bg-center"
+        style="
+          background-image: url(${data.fields.image_url});
+        "
+      ></div>
+      <p class="font-bold text-orange-light mt-4 truncate">${
+        data.fields.title
+      }</p>
+      <p class="font-bold">
+        <span class="text-orange-light">Rp</span> ${
+          data.fields.money_accumulated
+        }
+        <span class="text-orange-light font-normal text-xs">terkumpul</span>
+      </p>
+      <div class="h-3 bg-brokenwhite rounded-full mt-4">
+        <div class="h-3 bg-orange-medium rounded-full w-[${
+          (100 * data.fields.money_accumulated) / data.fields.money_needed
+        }%]"></div>
+      </div>
+      <button
+        class="text-orange-dark font-bold bg-orange-light py-2 px-3 mt-4 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50"
+        onclick="location.href='/donation/${data.pk}'"
+      >
+        Donasi
+      </button>
+    </div>
+  </div>`;
+
+  $(document).ready(() => {
+    const render = data => {
+      const cards = data.map(card).join("");
+      $("#saved-card").html(cards);
+    };
+
+    $.ajax({
+      url: "/saved/json/" + username + "/",
+      type: "GET",
+      success: data => {
+        render(data);
+      },
+      error: error => {
+        console.log(error);
+      },
+    });
+  });
+</script>
+{% endblock content %}
