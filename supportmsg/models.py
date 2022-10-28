@@ -1,6 +1,3 @@
-from email import message
-from email.policy import default
-import imp
 from django.db import models
 from authentication.models import User
 import datetime
@@ -8,6 +5,7 @@ import datetime
 
 class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author_name = models.TextField(null = True)
     message = models.TextField()
     date_created = models.DateField(default=datetime.date.today)
     likes = models.IntegerField(default=0)
