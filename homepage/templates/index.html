@@ -1,63 +1,14 @@
 {% extends 'base.html' %} {% load static %} {% block meta %}
 <title>Don8</title>
 {% endblock meta %} {% block content %}
-<script>
-  $(document).ready(() => {
-    const card = data => `
-    <div
-      class="rounded-lg shadow-lg hover:shadow-xl hover:shadow-green-light bg-green-medium py-4 px-3 hover:scale-105 transition-all"
-    >
-      <div class="max-w-[250px] min-h-[150px] text-center text-brokenwhite">
-        <div
-          class="w-[250px] h-[150px] rounded bg-cover bg-center"
-          style="
-            background-image: url(${data.fields.image_url});
-          "
-        ></div>
-        <p class="font-bold text-orange-light mt-4">${data.fields.title}</p>
-        <p class="font-bold">
-          <span class="text-orange-light">Rp</span> ${
-            data.fields.money_accumulated
-          }
-          <span class="text-orange-light font-normal text-xs">terkumpul</span>
-        </p>
-        <div class="h-3 bg-brokenwhite rounded-full mt-4">
-          <div class="h-3 bg-orange-medium rounded-full w-[${
-            (100 * data.fields.money_accumulated) / data.fields.money_needed
-          }%]"></div>
-        </div>
-        <button
-          class="text-orange-dark font-bold bg-orange-light py-2 px-3 mt-4 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50"
-          onclick="location.href='/donation/${data.pk}'"
-        >
-          Donasi
-        </button>
-      </div>
-    </div>`;
-
-    const render = data => {
-      const cards = data.map(card).join("");
-      $("#donations-card").html(cards);
-    };
-
-    $.ajax({
-      url: "/donation",
-      type: "GET",
-      success: data => {
-        render(data);
-      },
-      error: err => {
-        console.log(err);
-      },
-    });
-  });
-</script>
 <div class="bg-brokenwhite min-h-screen">
   <div
     class="max-w-[80%] mx-auto min-h-screen flex flex-col-reverse md:flex-row items-center justify-center md:justify-between gap-5 pt-10 md:pt-0 md:gap-10"
   >
     <div class="text-center md:text-left">
-      <h1 class="font-bold text-green-dark text-[50px] md:text-[100px]">Don8</h1>
+      <h1 class="font-bold text-green-dark text-[50px] md:text-[100px]">
+        Don8
+      </h1>
       <p class="text-green-dark mb-[30px] text-justify">
         Sebuah platform donasi online yang menghubungkan donatur dengan
         organisasi, dimana organisasi dapat mendaftarkan kegiatan penggalangan
@@ -65,7 +16,7 @@
         menggalang dana dan masyarakat umum untuk melakukan donasi.
       </p>
       <button
-        class="text-brokenwhite  bg-gradient-to-r from-green-dark to-green-medium py-4 px-5 rounded-lg hover:scale-110 hover:shadow-lg transition-all hover:shadow-gree-medium/70 text-[25px]"
+        class="text-brokenwhite bg-gradient-to-r from-green-dark to-green-medium py-4 px-5 rounded-lg hover:scale-110 hover:shadow-lg transition-all hover:shadow-gree-medium/70 text-[25px]"
         onclick="const offset=document.getElementById('donations')?.offsetTop; window.scrollTo({top: offset===undefined?offset:offset-50, behavior:'smooth'})"
       >
         <div class="flex items-center gap-3">
@@ -281,22 +232,81 @@
   $("#create-donation").click(openModal);
   $(".classtutup").click(closeModal);
 
+  const card = data => `
+  <div
+    class="rounded-lg shadow-lg hover:shadow-xl hover:shadow-green-light bg-green-medium py-4 px-3 hover:scale-105 transition-all"
+  >
+    <div class="max-w-[250px] min-h-[150px] text-center text-brokenwhite">
+      <div
+        class="w-[250px] h-[150px] rounded bg-cover bg-center"
+        style="
+          background-image: url(${data.fields.image_url});
+        "
+      ></div>
+      <p class="font-bold text-orange-light mt-4">${data.fields.title}</p>
+      <p class="font-bold">
+        <span class="text-orange-light">Rp</span> ${
+          data.fields.money_accumulated
+        }
+        <span class="text-orange-light font-normal text-xs">terkumpul</span>
+      </p>
+      <div class="h-3 bg-brokenwhite rounded-full mt-4">
+        <div class="h-3 bg-orange-medium rounded-full w-[${
+          (100 * data.fields.money_accumulated) / data.fields.money_needed
+        }%]"></div>
+      </div>
+      <button
+        class="text-orange-dark font-bold bg-orange-light py-2 px-3 mt-4 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50"
+        onclick="location.href='/donation/${data.pk}'"
+      >
+        Donasi
+      </button>
+    </div>
+  </div>`;
+
+  $(document).ready(() => {
+    const render = data => {
+      const cards = data.map(card).join("");
+      $("#donations-card").html(cards);
+    };
+
+    $.ajax({
+      url: "/donation",
+      type: "GET",
+      success: data => {
+        data.sort((a, b) => {
+          const dateA = new Date(a.fields.date_expired);
+          const dateB = new Date(b.fields.date_expired);
+          return dateA - dateB;
+        });
+        render(data);
+      },
+      error: err => {
+        console.log(err);
+      },
+    });
+  });
+
   $(document).on("submit", "#post-form", function (e) {
+    e.preventDefault();
     $.ajax({
       type: "POST",
       url: "{% url 'homepage:add_ajax_donation' %}",
-      dataType:"json",
+      dataType: "json",
       data: {
         title: $("#title").val(),
         description: $("#description").val(),
         date_expired: $("#date_expired").val(),
         image_url: $("#image_url").val(),
+        money_needed: $("#money_needed").val(),
         csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
         action: "post",
       },
-      success: function(data) {
-        $("#post-form").empty();
-      }
+      success: function (data) {
+        $("#post-form").trigger("reset");
+        closeModal();
+        $("#donations-card").prepend(card(data));
+      },
     });
   });
 </script>
