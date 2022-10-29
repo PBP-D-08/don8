@@ -10,13 +10,14 @@
             class="text-brokenwhite bg-green-medium py-2 px-3 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50">
             Give Support
         </button>
+
         <div class="pt-6 flex flex-wrap items-center justify-center gap-10" id="message-cards">
             <!-- start card -->
-            <div
-                class="p-6 max-w-sm rounded-lg shadow-lg hover:shadow-xl hover:shadow-green-light bg-green-medium py-4 px-3 hover:scale-105 transition-all">
+            <!-- <div
+                class="p-6 max-w-sm min-w-[20%] rounded-lg shadow-lg hover:shadow-xl hover:shadow-green-light bg-green-medium py-4 px-3 hover:scale-105 transition-all">
                 <div class="flex items-center pb-2">
                     <div class="flex items-start justify-between w-full">
-                        <div class="pl-3 w-full">
+                        <div class="pl-2 w-full">
                             <p class="focus:outline-none text-xl font-bold leading-5 text-brokenwhite">Author</p>
                             <p class="focus:outline-none text-sm leading-normal pt-2 text-brokenwhite">nama charity</p>
                         </div>
@@ -24,19 +25,21 @@
                     </div>
                 </div>
                 <div class="px-2">
-                    <p class="focus:outline-none text-md leading-5 text-brokenwhite">A group of people interested
-                       rfectly simple and easy to distinguish.</p>
+                    <p class="focus:outline-none text-md leading-5 text-brokenwhite overflow-y-scroll h-24">Addddddddddddddddddddddddddddddddddddddddddddd
+                        dddddddddd ddddddd dddddddddd dddddddddd dddddddddd dddddddddd dddddddddd dddddddddd dddddddddd
+                        dddddddddd dddddddddd dddddddddd dddddddddd dddddddddd dddddddddd dddddddddd dddddddddd
+                        ddddddddddd ddddddddddddd wdwwwwwwwwwsh.</p>
                     <p class="focus:outline-none text-xs leading-normal pb-2 text-brokenwhite font-mono">21-10-03</p>
                     <div class="flex items-start justify-between w-full">
                         <button
                             class="text-orange-dark font-bold bg-orange-light py-2 px-3 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50"
-                            onclick="location.href='/donation/2'">
+                            id="btn-like">
                             Like This Post
                         </button>
                         <p class="text-orange-light py-2 text-xl">8 ❤</p>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <!-- end card -->
         </div>
@@ -95,6 +98,7 @@
                     </div>
                 </div>
             </form>
+
         </div>
     </div>
     <!-- end modal -->
@@ -110,14 +114,14 @@
 
     $("#create_post").click(openModal);
     $(".classtutup").click(closeModal);
-    
+
     function getPost() {
         const card = data => `
         <div
-                class="p-6 max-w-sm rounded-lg shadow-lg hover:shadow-xl hover:shadow-green-light bg-green-medium py-4 px-3 hover:scale-105 transition-all">
+                class="p-6 max-w-sm min-w-[20%] rounded-lg shadow-lg hover:shadow-xl hover:shadow-green-light bg-green-medium py-4 px-3 hover:scale-105 transition-all">
                 <div class="flex items-center pb-2">
                     <div class="flex items-start justify-between w-full">
-                        <div class="pl-3 w-full">
+                        <div class="pl-2 w-full">
                             <p class="focus:outline-none text-xl font-bold leading-5 text-brokenwhite">${data.fields.author_name}</p>
                             <p class="focus:outline-none text-sm leading-normal pt-2 text-brokenwhite">nama charity</p>
                         </div>
@@ -125,15 +129,16 @@
                     </div>
                 </div>
                 <div class="px-2">
-                    <p class="focus:outline-none text-md leading-5 pt-2 text-brokenwhite">${data.fields.message}</p>
+                    <p class="focus:outline-none text-md leading-5 text-brokenwhite overflow-y-auto h-24">${data.fields.message}</p>
                     <p class="focus:outline-none text-xs leading-normal pb-2 text-brokenwhite font-mono">${data.fields.date_created}</p>
                     <div class="flex items-start justify-between w-full">
-                        <button
+                        <button id="btnLike"
                             class="text-orange-dark font-bold bg-orange-light py-2 px-3 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50"
-                            onclick="location.href='/donation/2'">
+                            data-id="${data.pk}">
                             Like This Post
                         </button>
-                        <p class="text-orange-light py-2 text-xl">${data.fields.likes} ❤</p>
+                            
+                        <p class="text-orange-light py-2 text-xl">${data.fields.likes.length} ❤</p>
                     </div>
                 </div>
             </div>`;
@@ -142,7 +147,7 @@
             const cards = data.map(card).join("");
             $("#message-cards").html(cards);
         };
-        
+
         $.ajax({
             type: "GET",
             url: "json/",
@@ -156,7 +161,6 @@
         });
 
     }
-
     function addPost(e) {
         e.preventDefault()
         $.ajax({
@@ -177,9 +181,27 @@
 
         });
     }
+
+    function likePost(e) {
+        e.preventDefault()
+        const id = $(e.target).data("id")
+        $.ajax({
+            type: "POST",
+            url: 'like-post/',
+            data: { 'post_id': id, 'csrfmiddlewaretoken': '{{ csrf_token }}' },
+            dataType: "json",
+            success: () => {
+                getPost()
+            },
+
+        });
+    }
+
     $(document).ready(() => {
         getPost()
         $("#btnSubmit").click(addPost)
+        $("#btnLike").click(likePost)
+
 
     });
 </script>
