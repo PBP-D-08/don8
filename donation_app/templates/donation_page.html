@@ -1,122 +1,198 @@
 {% extends 'base.html' %}
+
 {% block content %}
 
 <script>
     $(document).ready(() => {
+        const template = data => `
+            
+            <div
+            class="w-[500px] h-[400px] rounded-2xl bg-cover bg-center"
+            style="
+            background-image: url('${data.fields.image_url}');
+            ">
+            </div>
+            <div class="flex flex-col gap-4">
+                <p class="font-bold text-orange-light text-3xl mt-6 flex flex-col items-center">${data.fields.title}</p>
+                <p class="font-bold flex flex-col items-center mb-1">
+                    <span>
+                        <span class="text-orange-light text-xl">Rp</span>
+                        <span id="money_accumulated" class="text-xl">${data.fields.money_accumulated.toLocaleString('en-US').replace(',', '.')}</span>
+                        <span class="text-orange-light font-normal text-lg">terkumpul</span>
+                    </span>
+                </p>
+            </div>
+            <div class="h-3 bg-brokenwhite rounded-full mt-2">
+                <div id = "progress_bar" class="h-3 bg-orange-medium rounded-full w-[${data.fields.money_accumulated / data.fields.money_needed > 1 ? 100 : 100 * data.fields.money_accumulated / data.fields.money_needed}%]">
+                </div>
+            </div>
+            <div class="flex flex-col items-center mt-1">
+                <button
+                    class="text-orange-dark font-bold bg-orange-light py-2 px-3 mt-4 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50"
+                    id="make-donation-button"                   
+                >
+                    Donasi
+                </button>
+            </div>
+        `;
 
-        // // for template data yg diambil
-        // const card = task => `
+        const template2 = data => `
+            <p class="font-bold text-orange-light text-3xl">Deskripsi</p>
+            <p class="text-lg mt-5">${data.fields.description}</p>
+        `;
 
-        // `;
+        const template3 = data => `
+            <div class="flex flex-row gap-40 items-center">
+                    
+                <p class="font-bold text-orange-light text-xl">Nama Perusahaan</p>
+                <button class="text-orange-dark font-bold bg-orange-light py-2 px-3 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50">
+                    Kunjungi Profil
+                </button>
+            </div>
+        `;
 
-        // const render = () => {
-        //     $.get("{%url 'donation_app:get_donation_data'}"), data => {
-        //         $("#donation").append(card(data));
-
-        //     }
-
-        // }
-
-        // const updateMoneyAccumulated = id => {
-        //     // get the CSRF Token
-        //     const csrftoken = document.querySelector(
-        //         '[name=csrfmiddlewaretoken]'
-        //     ).value;
-
-        //     $.ajax({
-        //         
-        //         type: 'PUT',
-        //         headers: { 'X-CSRFToken': csrftoken }, // give CSRF token to the header
-        //         mode: 'same-origin', // Do not send CSRF token to another domain.
-        //         success: response => {
-        //             // refresh
-        //             $('#money_accumulated').empty();
-        //             render();
-        //         },
-        //         // error: error => {
-        //         // console.log(error);
-        //         // },
-        //     });
-        // }
-
-        const openModal = e => {
-            $('#make-donation-modal').removeClass('hidden');
+        const render = data => {
+            $("#donation-main").html(template(data));
+            $("#donation-description").html(template2(data));
+            $("#company-profile").html(template3(data))
         };
 
-        const closeModal = e => {
-            $('#make-donation-modal').addClass('hidden')
+        const id = $(location).attr("pathname").split("/")[2];
+
+        $.ajax({
+            url: `/donation/json/${id}/`,
+            type: "GET",
+            success: data => {
+                render(data[0]);
+            },
+            error: err => {
+                console.log(err);
+            },
+        });
+
+        const openDonationModal = e => {
+            $("#make-donation-modal").removeClass("hidden");
         };
 
-        $('#make-donation-button').click(openModal)
-        $('#close-icon').click(closeModal)
+        const closeDonationModal = e => {
+            $("#make-donation-modal").addClass("hidden");
+        };
 
-        $('make-donation-form').submit = e => {
-            e.preventDefault();
+        const openUnauthorizedModal = e => {
+            $("#unauthorized-modal").removeClass("hidden");
+        };
+
+        const closeUnauthorizedModal = e => {
+            $("#unauthorized-modal").addClass("hidden");
+        };
+
+        $("body").on('click', '#unauthorized-button', function () {
+            closeUnauthorizedModal();
+        });
+
+        $("body").on('click', '#make-donation-button', function () {
 
             $.ajax({
-                    type: "POST",
-                    url: "{% url 'donation_app:make-donation' 0 %}".replace('0', id),
-                    data: {
-                        amount_of_donation: $("#amount-of-donation").val(),
-                    },
-                    success: function (response) {
-                        $("#make-donation-form").trigger("reset"); // untuk meng-clear formnya
-                        closeModal();
-                        document.getElementById('money_accumulated').innerHTML += parseInt(amount_of_donation);
-                        // $("#money_accumulated").append(response);
+                url: `/donation/check-user/`,
+                type: "GET",
+                success: isDonator  => {
+
+                    if (isDonator["user"]) {
+                        openDonationModal();
+                    } else {
+                        openUnauthorizedModal();
                     }
-                })   
-        }
-    })
+                },
+                    error: err => {
+                        console.log(err);
+                },
+            });
+        });
+
+        $("#close-icon").click(closeDonationModal);
+        $("body").on('submit', "#make-donation-form", function (e) {
+            e.preventDefault();
+
+            $.ajaxSetup({
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", jQuery("[name=csrfmiddlewaretoken]").val());
+                }
+            });
+
+            $.ajax({
+                type: "POST",
+                url: "{% url 'donation_app:make_donation' 0 %}".replace("0", id),
+                data: {
+                    'amount_of_donation': $("#id_amount_of_donation").val(),
+                },
+                success: function (response) {
+                    $("#make-donation-form").trigger("reset");
+                    closeDonationModal();
+                    document.getElementById("money_accumulated").innerHTML = response.money_accumulated.toLocaleString('en-US').replace(',', '.')
+                    var progress = response.money_accumulated / response.money_needed > 1 ? 100 : 100 * response.money_accumulated / response.money_needed
+                    $("#progress_bar").attr("class", `h-3 bg-orange-medium rounded-full w-[${progress}%]`)
+                },
+            });
+        });
+    });
 
 </script>
 
 <div id="make-donation-modal"
-        class="w-full fixed flex justify-center w-full z-10 min-h-screen items-center bg-black bg-opacity-50 hidden">
-        <div class="bg-white rounded-lg">
-            <div class="flex justify-between px-5 py-2 bg-blue-200 rounded-t-lg">
-                <h1>Make a donation</h1>
-                <div class="cursor-pointer" id="close-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </div>
+    class="w-full fixed flex justify-center z-10 min-h-screen items-center bg-black bg-opacity-50 hidden">
+    <div class="bg-white rounded-lg">
+        <div class="flex justify-between px-5 py-2 bg-blue-200 rounded-t-lg">
+            <h1>Make a donation</h1>
+            <div class="cursor-pointer" id="close-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
             </div>
+        </div>
 
-            <div class="m-5">
-                <form method="POST" action="" id="make-donation-form">
-                    {% csrf_token %}
-                    <div class="flex flex-col gap-5">
-                        <div class="flex gap-5">
-                            Amount of Donation:
-                            <input type="text" name="amount-of-donation" placeholder="" id="amount-of-donation"
-                                class="border-2 border-blue-500 rounded">
-                        </div>
-
-                        <div class="flex gap-5 mx-auto">
-                            <input class="p-2 bg-blue-200 rounded cursor-pointer" type="submit" value="Submit"> 
-                        </div>
+        <div class="m-5">
+            <form method="POST" id="make-donation-form">
+                {% csrf_token %}
+                <div class="grid-col-span-2 gap-5">
+                    {{form.as_div}}
+                    <div class="grid-row-span-2 mx-auto">
+                        <input class="p-2 bg-blue-200 rounded cursor-pointer" type="submit" value="Submit" />
                     </div>
-                </form>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="unauthorized-modal"
+    class="w-full fixed flex justify-center z-10 min-h-screen items-center bg-black bg-opacity-50 hidden">
+    <div class="bg-white rounded-lg">
+        <div class="flex justify-between px-5 py-2 bg-blue-200 rounded-t-lg">
+            <h1>Anda harus login sebagai pengguna</h1>
+        </div>
+
+        <div class="flex gap-5 mx-auto" id = "unauthorized-button">
+            <button class="p-2 bg-blue-200 rounded cursor-pointer">
+                <a href="{% url 'auth:login' %}">Login</a>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="bg-brokenwhite min-h-screen">
+    <div class="max-w-[80%] mx-auto min-h-screen flex flex-col items-center justify-center">
+
+        <div class="col-2 flex flex-row gap-8">
+            <div class="bg-green-medium p-5 rounded-3xl text-brokenwhite p-7 " id="donation-main"></div>
+
+            <div class="flex flex-col gap-8 max-w-xl">
+                <div class="bg-green-medium p-5 rounded-3xl text-brokenwhite h-1/2 p-7" id="donation-description"></div>
+                <div class="bg-green-medium p-5 rounded-3xl text-brokenwhite h-1/2 p-7" id="company-profile"></div>
             </div>
         </div>
     </div>
-
-    <div>
-        {% for data in donation %}
-        <div>
-            {{data.user}}
-            {{data.title}}
-            {{data.description}}
-            {{data.date_created}}
-            {{data.expired}}
-            <div id="money_accumulated">
-                {{data.money_accumulated}}
-            </div>
-        </div>
-
-        {% endfor %}
-    </div>
+</div>
 
 {% endblock content %}
