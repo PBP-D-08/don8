@@ -47,6 +47,7 @@
     <h1 class="text-green-dark text-[50px] font-bold mb-10 text-center">
       Donations
     </h1>
+    <div id="no-donation"></div>
     <div
       class="flex flex-wrap items-center justify-center gap-10"
       id="donations-card"
@@ -310,7 +311,13 @@
           const dateB = new Date(b.fields.date_expired);
           return dateA - dateB;
         });
-        render(data);
+        if (data.length == 0) {
+          $("#no-donation").html(
+            "<div class='text-center text-green-dark text-[15px] md:text-[20px] '>Maaf, saat ini sedang tidak tersedia donasi apapun.</div>"
+          );
+        } else {
+          render(data);
+        }
       },
       error: err => {
         console.log(err);

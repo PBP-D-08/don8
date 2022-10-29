@@ -21,6 +21,7 @@
       <span> Saved Donations </span>
     </div>
     <form action="POST" class="hidden">{% csrf_token %}</form>
+    <div id="no-donation"></div>
     <div
       class="flex flex-wrap items-center justify-center gap-10"
       id="saved-card"
@@ -46,6 +47,11 @@
       mode: "same-origin", // Do not send CSRF token to another domain.
       success: response => {
         if (response.status == 200) $(`#card-${id}`).remove();
+        if ($("#saved-card").children().length == 0) {
+          $("#no-donation").html(
+            "<div class='text-center text-green-dark text-[15px] md:text-[20px] '>Maaf, anda tidak menyimpan donasi apapun.</div>"
+          );
+        }
       },
     });
   };
@@ -60,7 +66,13 @@
       url: "/saved/json/" + username + "/",
       type: "GET",
       success: data => {
-        render(data);
+        if (data.length == 0) {
+          $("#no-donation").html(
+            "<div class='text-center text-green-dark text-[15px] md:text-[20px] '>Maaf, anda tidak menyimpan donasi apapun.</div>"
+          );
+        } else {
+          render(data);
+        }
       },
       error: error => {
         console.log(error);
