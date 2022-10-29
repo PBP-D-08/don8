@@ -39,6 +39,12 @@ def show_json(request, id):
     for i in profile:
         profile = i
     donations = Donation.objects.filter(user=profile)
+    for i in donations:
+        i.org_name = profile.username
+        i.save()
+    profile.total_campaign = len(donations)
+    profile.save()
+
     return HttpResponse(
         serializers.serialize("json", donations), content_type="application/json"
     )

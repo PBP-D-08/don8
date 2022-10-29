@@ -19,3 +19,6 @@ class Profile(User):
     withdrawn = models.IntegerField(default=0)
     total_campaign = models.IntegerField(default=0)
 
+class Donation_List(Donation):
+    org_name = models.CharField(max_length=255, default="")
+

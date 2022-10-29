@@ -5,52 +5,40 @@
 <script>
     $(document).ready(() => {
 
-        $.ajax({
-            url: "{% url 'auth:check_login' %}",
-            type: "GET",
-            success: response => {
-                // console.log(response.is_login);
-                if (response.username != "{{ profile.username }}") {
-                    $("#withdraw").hide();
-                }
-                else
-                {
-                    $("#withdraw").show();
-                }
-            },
-        });
-
         const card = data => `
-    <div
-      class="rounded-lg shadow-lg bg-green-medium py-4 px-3 hover:scale-105 transition-all"
-    >
-      <div class="max-w-[250px] min-h-[150px] text-center text-brokenwhite">
-        <div
-          class="w-[250px] h-[150px] rounded bg-cover bg-center"
-          style="
-            background-image: url(${data.fields.image_url});
-          "
-        ></div>
-        <p class="font-bold text-orange-light mt-4">${data.fields.title}</p>
-        <p class="font-bold">
-          <span class="text-orange-light">Rp</span> ${
-            data.fields.money_accumulated
-        }
-          <span class="text-orange-light font-normal text-xs">terkumpul</span>
-        </p>
-        <div class="h-3 bg-brokenwhite rounded-full mt-4">
-          <div class="h-3 bg-orange-medium rounded-full w-[${
-            (100 * data.fields.money_accumulated) / data.fields.money_needed
-        }%]"></div>
-        </div>
-        <button
-          class="text-orange-dark font-bold bg-orange-light py-2 px-3 mt-4 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50"
-          onclick= "location.href='/donation/${data.pk}'"
-        >
-          Donasi
-        </button>
-      </div>
-    </div>`;
+            <div
+              class="rounded-lg shadow-lg bg-green-medium py-4 px-3 hover:scale-105 transition-all"
+            >
+              <div class="max-w-[250px] min-h-[150px] text-center text-brokenwhite">
+                <div
+                  class="w-[250px] h-[150px] rounded bg-cover bg-center"
+                  style="
+                    background-image: url(${data.fields.image_url});
+                  "
+                ></div>
+                <p class="font-bold text-orange-light mt-4">${data.fields.title}</p>
+                <p class="font-bold">
+                  <span class="text-orange-light">Rp</span> ${
+                    data.fields.money_accumulated
+                }
+                  <span class="text-orange-light font-normal text-xs">terkumpul</span>
+                </p>
+                <div class="h-3 bg-brokenwhite rounded-full mt-4">
+                  <div class="h-3 bg-orange-medium rounded-full w-[${
+                    (100 * data.fields.money_accumulated) / data.fields.money_needed
+                }%]"></div>
+                </div>
+                {% comment %}
+                <button
+                  class="text-orange-dark font-bold bg-orange-light py-2 px-3 mt-4 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50"
+                  id="donate_button"
+                  onclick= "location.href='/donation/${data.pk}'"
+                >
+                  Donasi
+                </button>
+                {% endcomment %}
+              </div>
+            </div>`;
 
         const render = data => {
             const cards = data.map(card).join("");
@@ -61,10 +49,34 @@
             url: "donations",
             type: "GET",
             success: data => {
-                render(data);
+                if (data.length > 0) {
+                    render(data);
+                } else {
+                    $("#donations-card").html(
+                        `<p class="text-center text-orange-dark">Tidak ada donasi yang tersedia :(</p>`
+                    );
+                }
             },
             error: err => {
                 console.log(err);
+            },
+        });
+
+        $.ajax({
+            url: "{% url 'auth:check_login' %}",
+            type: "GET",
+            success: response => {
+                // console.log(response.is_login);
+                if (response.is_login) {
+                    if (response.username != "{{ profile.username }}") {
+                        $("#withdraw").hide();
+                    } else {
+                        $("#withdraw").show();
+                    }
+                }
+                else {
+                    $("#withdraw").hide();
+                }
             },
         });
     });
