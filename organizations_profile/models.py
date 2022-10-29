@@ -13,6 +13,9 @@ from homepage.models import Donation
     donation = models.OneToManyField(
         Donation,
         null=True,
-        on_delete=models.SET_NULL
     )'''
+
+class Profile(User):
+    withdrawn = models.IntegerField(default=0)
+    total_campaign = models.IntegerField(default=0)
 

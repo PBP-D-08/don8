@@ -1,33 +1,44 @@
 from datetime import datetime
 from urllib import response
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.core import serializers
 from django.shortcuts import render
 from homepage.models import Donation
+from organizations_profile.models import Profile
+from authentication.models import User
+from organizations_profile.forms import WithdrawForm
+
 
 
 # Create your views here.
 def organizations_profile(request, id):
+    profiles = list(User.objects.filter(username=id))
+    for i in profiles:
+        profile = i
     if request.method == "POST":
-        title = request.POST.get("title")
-        description = request.POST.get("description")
-        date_expired = request.POST.get("date_expired")
-        image_url = request.POST.get("image_url")
-        date_created = datetime.now()
-        user = request.user
-        Donation.objects.create(
-            user=user,
-            title=title,
-            description=description,
-            date_created=date_created,
-            date_expired=date_expired,
-            image_url=image_url,
-        )
-    return render(request, "profile.html")
+        form = WithdrawForm(request.POST)
+        if form.is_valid():
+            profile.balance -= form.cleaned_data["amount"]
+            profile.save()
+            context = {
+                "profile": profile.balance,
+            }
+            return JsonResponse(context)
+    else:
+        form = WithdrawForm()
+    context = {
+        'nama': id,
+        'profile': profile,
+        'form': form,
+    }
+    return render(request, "profile.html", context)
 
 
-def show_json(request):
-    donations = Donation.objects.all()
+def show_json(request, id):
+    profile = list(User.objects.filter(username=id))
+    for i in profile:
+        profile = i
+    donations = Donation.objects.filter(user=profile)
     return HttpResponse(
         serializers.serialize("json", donations), content_type="application/json"
     )

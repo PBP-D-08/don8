@@ -5,5 +5,5 @@ app_name = "profile/org"
 
 urlpatterns = [
     path("<str:id>/", organizations_profile, name="organizations_profile"),
-    path("show_json/", show_json, name="show_json"),
+    path("<str:id>/donations/", show_json, name="show_json"),
 ]
