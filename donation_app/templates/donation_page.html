@@ -7,8 +7,10 @@
         const template = data => `
             
             <div
-            class="w-[500px] h-[400px] rounded-2xl bg-cover bg-center"
+            class=" rounded-2xl bg-cover bg-center"
             style="
+            width:100%;
+            height:400px;
             background-image: url('${data.fields.image_url}');
             ">
             </div>
@@ -42,9 +44,9 @@
         `;
 
         const template3 = data => `
-            <div class="flex flex-row gap-40 items-center">
+            <div class="flex flex-row items-center" style="justify-content:space-between">
                     
-                <p class="font-bold text-orange-light text-xl">Nama Perusahaan</p>
+                <p class="font-bold text-orange-light text-xl">${data.fields.user}</p>
                 <button class="text-orange-dark font-bold bg-orange-light py-2 px-3 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50">
                     Kunjungi Profil
                 </button>
@@ -154,9 +156,9 @@
         <div class="m-5">
             <form method="POST" id="make-donation-form">
                 {% csrf_token %}
-                <div class="grid-col-span-2 gap-5">
+                <div class="flex flex-col gap-5">
                     {{form.as_div}}
-                    <div class="grid-row-span-2 mx-auto">
+                    <div class="flex gap-5 mx-auto">
                         <input class="p-2 bg-blue-200 rounded cursor-pointer" type="submit" value="Submit" />
                     </div>
 
@@ -181,17 +183,18 @@
     </div>
 </div>
 
-<div class="bg-brokenwhite min-h-screen">
+<div class="bg-brokenwhite min-h-screen 2xl:pt-4 pt-24">
     <div class="max-w-[80%] mx-auto min-h-screen flex flex-col items-center justify-center">
 
-        <div class="col-2 flex flex-row gap-8">
-            <div class="bg-green-medium p-5 rounded-3xl text-brokenwhite p-7 " id="donation-main"></div>
+        <div class="col-2 flex lg:flex-row gap-8 flex-col items-center lg:justify-center" style="width:100%">
+            <div class="bg-green-medium p-5 rounded-3xl text-brokenwhite p-7" style = "width:min(100%, 600px)" id="donation-main"></div>
 
-            <div class="flex flex-col gap-8 max-w-xl">
-                <div class="bg-green-medium p-5 rounded-3xl text-brokenwhite h-1/2 p-7" id="donation-description"></div>
-                <div class="bg-green-medium p-5 rounded-3xl text-brokenwhite h-1/2 p-7" id="company-profile"></div>
+            <div class="flex flex-col gap-8 max-w-xl " style = "width:min(100%, 600px)">
+                <div class="bg-green-medium p-5 rounded-3xl text-brokenwhite h-1/2 p-7 w-[100%]" id="donation-description"></div>
+                <div class="bg-green-medium p-5 rounded-3xl text-brokenwhite h-1/2 p-7 w-[100%]" id="company-profile"></div>
             </div>
         </div>
+
     </div>
 </div>
 
