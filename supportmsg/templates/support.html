@@ -121,14 +121,13 @@
                     <p class="focus:outline-none text-md leading-5 text-brokenwhite overflow-y-auto h-24">${data.fields.message}</p>
                     <p class="focus:outline-none text-xs leading-normal pb-2 text-brokenwhite font-mono">${data.fields.date_created}</p>
                     <div class="flex items-start justify-between w-full">
-                        <form action="/message/like-post/" method="POST">
-                            {% csrf_token %}
+                        
                             <button id="btnLike"
                                 class="text-orange-dark font-bold bg-orange-light py-2 px-3 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50"
                                 data-id="${data.pk}">
                                 Like This Post
                             </button>
-                            </form>   
+
                         <p class="text-orange-light py-2 text-xl">${data.fields.likes.length} ❤</p>
                     </div>
                 </div>
