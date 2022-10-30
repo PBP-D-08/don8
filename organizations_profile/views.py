@@ -15,21 +15,30 @@ def organizations_profile(request, id):
     profiles = list(User.objects.filter(username=id))
     for i in profiles:
         profile = i
+    org_profile = Profile.objects.get(organization=profile)
     if request.method == "POST":
         form = WithdrawForm(request.POST)
         if form.is_valid():
-            profile.balance -= form.cleaned_data["amount"]
-            profile.save()
-            context = {
-                "profile": profile.balance,
-            }
-            return JsonResponse(context)
+            if (org_profile.withdrawn + form.cleaned_data["amount"]) <= profile.balance:
+                org_profile.withdrawn += form.cleaned_data["amount"]
+                org_profile.save()
+                context = {
+                    "profile_b": profile.balance, "profile_w": org_profile.withdrawn, "profile_t": org_profile.total_campaign,
+                }
+                return JsonResponse(context)
+            else:
+                context = {
+                    "profile_b": profile.balance, "profile_w": org_profile.withdrawn, "profile_t": org_profile.total_campaign,
+                }
+                return JsonResponse(context)
     else:
         form = WithdrawForm()
     context = {
         'nama': id,
         'profile': profile,
         'form': form,
+        'org_profile': org_profile,
+        'user': request.user,
     }
     return render(request, "profile.html", context)
 
@@ -38,12 +47,13 @@ def show_json(request, id):
     profile = list(User.objects.filter(username=id))
     for i in profile:
         profile = i
+    org_profile = Profile.objects.get(organization=profile)
     donations = Donation.objects.filter(user=profile)
     for i in donations:
         i.org_name = profile.username
         i.save()
-    profile.total_campaign = len(donations)
-    profile.save()
+    org_profile.total_campaign = len(donations)
+    org_profile.save()
 
     return HttpResponse(
         serializers.serialize("json", donations), content_type="application/json"

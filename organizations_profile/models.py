@@ -1,24 +1,10 @@
 from django.conf import settings
 from django.db import models
 from authentication.models import User
-from homepage.models import Donation
 
-# Create your models here.
-'''class Donation_List(models.Model):
-    user = models.OneToOneField(
-        User,
-        null=True,
-        on_delete=models.CASCADE
-    )
-    donation = models.OneToManyField(
-        Donation,
-        null=True,
-    )'''
 
-class Profile(User):
+class Profile(models.Model):
+    organization = models.OneToOneField(User, on_delete=models.CASCADE, related_name="company")
     withdrawn = models.IntegerField(default=0)
     total_campaign = models.IntegerField(default=0)
-
-class Donation_List(Donation):
-    org_name = models.CharField(max_length=255, default="")
 
