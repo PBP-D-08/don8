@@ -104,9 +104,22 @@
             $("#unauthorized-modal").addClass("hidden");
         };
 
+        const openNoMoneyModal = e => {
+            $("#no-money-modal").removeClass("hidden");
+        };
+
+        const closeNoMoneyModal = e => {
+            $("#no-money-modal").addClass("hidden");
+        };
+
         $("body").on('click', '#unauthorized-button', function () {
             closeUnauthorizedModal();
         });
+
+        $("body").on('click', '#no-money-button', function () {
+            closeNoMoneyModal();
+        });
+
 
         $("body").on('click', '#make-donation-button', function () {
 
@@ -149,6 +162,12 @@
                     document.getElementById("money_accumulated").innerHTML = response.money_accumulated.toLocaleString('en-US').replaceAll(',', '.')
                     var progress = response.money_accumulated / response.money_needed > 1 ? 100 : 100 * response.money_accumulated / response.money_needed
                     $("#progress_bar").attr("class", `h-3 bg-orange-medium rounded-full w-[${progress}%]`)
+
+                    
+                    if (response.message == "Not enough money"){
+                        openNoMoneyModal();
+                    }
+
                 },
             });
         });
@@ -193,6 +212,21 @@
         <div class="flex gap-5 justify-center items-center" id = "unauthorized-button">
             <button class="p-2 text-orange-dark font-bold bg-orange-light rounded cursor-pointer mt-3 mb-2">
                 <a href="{% url 'auth:login' %}">Login</a>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="no-money-modal"
+    class="w-full fixed flex justify-center z-10 min-h-screen items-center bg-black bg-opacity-50 hidden">
+    <div class="bg-white rounded-lg">
+        <div class="flex justify-between px-5 py-2 font-bold bg-green-medium text-brokenwhite p-7 rounded-t-lg">
+            <h1>Uang Anda tidak cukup</h1>
+        </div>
+
+        <div class="flex gap-5 justify-center items-center" id = "no-money-button">
+            <button class="p-2 px-3 text-orange-dark font-bold bg-orange-light rounded cursor-pointer mt-3 mb-2">
+                OK
             </button>
         </div>
     </div>
