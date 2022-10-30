@@ -9,7 +9,7 @@ class DonationForm(forms.ModelForm):
         model = UserDonation
         fields = ["amount_of_donation"]
         widgets = {
-            "amount_of_donation": forms.NumberInput(attrs={"class" : "border-2 border-blue-500 rounded"})
+            "amount_of_donation": forms.NumberInput(attrs={"class" : "border-2 border-blue-500 rounded border-black"})
         }
 
     def save(self, request, donation_id):
@@ -26,6 +26,7 @@ class DonationForm(forms.ModelForm):
             UserDonation.objects.create(
                 user = user,
                 organization = donation.user,
+                donation = donation,
                 date = datetime.date.today(),
                 amount_of_donation = amount_of_donation
             )

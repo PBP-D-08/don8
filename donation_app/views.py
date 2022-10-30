@@ -4,8 +4,10 @@ from authentication.models import User
 from django.http import HttpResponse, JsonResponse
 from django.core import serializers
 from donation_app.forms import DonationForm
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
+@login_required(login_url="/auth/login/")
 def show_donation_page(request, id):
     context = {
         "form": DonationForm()
@@ -31,10 +33,14 @@ def get_donation_data(request, id):
     donation_data = Donation.objects.filter(id=id) # ganti jd ambil data user buat cek wallet
     return HttpResponse(serializers.serialize("json", donation_data), content_type="application/json")
 
+def get_organization_data(request, id):
+    organization_data = User.objects.filter(id=id)
+    return HttpResponse(serializers.serialize("json", organization_data), content_type="application/json")
+
 def check_user(request):    
     if request.user.is_authenticated:
         if request.user.role == 1:
 
-            return JsonResponse({"user": True})
+            return JsonResponse({"pengguna": True})
             
-    return JsonResponse({"user": False})
+    return JsonResponse({"pengguna": False})

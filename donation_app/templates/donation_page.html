@@ -19,7 +19,9 @@
                 <p class="font-bold flex flex-col items-center mb-1">
                     <span>
                         <span class="text-orange-light text-xl">Rp</span>
-                        <span id="money_accumulated" class="text-xl">${data.fields.money_accumulated.toLocaleString('en-US').replace(',', '.')}</span>
+                        <span id="money_accumulated" class="text-xl">${data.fields.money_accumulated.toLocaleString('en-US').replaceAll(',', '.')}</span>
+                        <span class="text-orange-light font-normal text-lg"> / </span>
+                        <span class="text-xl">${data.fields.money_needed.toLocaleString('en-US').replaceAll(',', '.')}</span>
                         <span class="text-orange-light font-normal text-lg">terkumpul</span>
                     </span>
                 </p>
@@ -46,26 +48,40 @@
         const template3 = data => `
             <div class="flex flex-row items-center" style="justify-content:space-between">
                     
-                <p class="font-bold text-orange-light text-xl">${data.fields.user}</p>
+                <p class="font-bold text-orange-light text-2xl">${data.fields.username}</p>
                 <button class="text-orange-dark font-bold bg-orange-light py-2 px-3 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50">
                     Kunjungi Profil
                 </button>
             </div>
         `;
 
-        const render = data => {
+        const render_donation = data => {
             $("#donation-main").html(template(data));
             $("#donation-description").html(template2(data));
-            $("#company-profile").html(template3(data))
         };
+
+        const render_organization = data => {
+            $("#organization-profile").html(template3(data))
+        }
 
         const id = $(location).attr("pathname").split("/")[2];
 
         $.ajax({
-            url: `/donation/json/${id}/`,
+            url: `/donation/json-donation/${id}/`,
             type: "GET",
             success: data => {
-                render(data[0]);
+                render_donation(data[0]);
+
+                $.ajax({
+                    url: `/donation/json-organization/${data[0].fields.user}/`,
+                    type: "GET",
+                    success: data => {
+                        render_organization(data[0]);
+                    },
+                    error: err => {
+                        console.log(err);
+                    },
+                });
             },
             error: err => {
                 console.log(err);
@@ -97,9 +113,9 @@
             $.ajax({
                 url: `/donation/check-user/`,
                 type: "GET",
-                success: isDonator  => {
+                success: user  => {
 
-                    if (isDonator["user"]) {
+                    if (user["pengguna"]) {
                         openDonationModal();
                     } else {
                         openUnauthorizedModal();
@@ -130,7 +146,7 @@
                 success: function (response) {
                     $("#make-donation-form").trigger("reset");
                     closeDonationModal();
-                    document.getElementById("money_accumulated").innerHTML = response.money_accumulated.toLocaleString('en-US').replace(',', '.')
+                    document.getElementById("money_accumulated").innerHTML = response.money_accumulated.toLocaleString('en-US').replaceAll(',', '.')
                     var progress = response.money_accumulated / response.money_needed > 1 ? 100 : 100 * response.money_accumulated / response.money_needed
                     $("#progress_bar").attr("class", `h-3 bg-orange-medium rounded-full w-[${progress}%]`)
                 },
@@ -143,8 +159,8 @@
 <div id="make-donation-modal"
     class="w-full fixed flex justify-center z-10 min-h-screen items-center bg-black bg-opacity-50 hidden">
     <div class="bg-white rounded-lg">
-        <div class="flex justify-between px-5 py-2 bg-blue-200 rounded-t-lg">
-            <h1>Make a donation</h1>
+        <div class="flex justify-between px-5 py-2 bg-green-medium text-brokenwhite p-7 rounded-t-lg">
+            <h1 class="font-bold">Make a donation</h1>
             <div class="cursor-pointer" id="close-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="w-6 h-6">
@@ -159,9 +175,8 @@
                 <div class="flex flex-col gap-5">
                     {{form.as_div}}
                     <div class="flex gap-5 mx-auto">
-                        <input class="p-2 bg-blue-200 rounded cursor-pointer" type="submit" value="Submit" />
+                        <input class="p-2 text-orange-dark font-bold bg-orange-light rounded cursor-pointer" type="submit" value="Submit" />
                     </div>
-
                 </div>
             </form>
         </div>
@@ -171,12 +186,12 @@
 <div id="unauthorized-modal"
     class="w-full fixed flex justify-center z-10 min-h-screen items-center bg-black bg-opacity-50 hidden">
     <div class="bg-white rounded-lg">
-        <div class="flex justify-between px-5 py-2 bg-blue-200 rounded-t-lg">
+        <div class="flex justify-between px-5 py-2 font-bold bg-green-medium text-brokenwhite p-7 rounded-t-lg">
             <h1>Anda harus login sebagai pengguna</h1>
         </div>
 
-        <div class="flex gap-5 mx-auto" id = "unauthorized-button">
-            <button class="p-2 bg-blue-200 rounded cursor-pointer">
+        <div class="flex gap-5 justify-center items-center" id = "unauthorized-button">
+            <button class="p-2 text-orange-dark font-bold bg-orange-light rounded cursor-pointer mt-3 mb-2">
                 <a href="{% url 'auth:login' %}">Login</a>
             </button>
         </div>
@@ -191,7 +206,7 @@
 
             <div class="flex flex-col gap-8 max-w-xl " style = "width:min(100%, 600px)">
                 <div class="bg-green-medium p-5 rounded-3xl text-brokenwhite h-1/2 p-7 w-[100%]" id="donation-description"></div>
-                <div class="bg-green-medium p-5 rounded-3xl text-brokenwhite h-1/2 p-7 w-[100%]" id="company-profile"></div>
+                <div class="bg-green-medium p-5 rounded-3xl text-brokenwhite h-1/2 p-7 w-[100%]" id="organization-profile"></div>
             </div>
         </div>
 
