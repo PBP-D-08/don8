@@ -10,12 +10,6 @@
             class="text-brokenwhite bg-green-medium py-2 px-3 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50">
             Give Support
         </button>
-        <button id="btnLike"
-            class="text-orange-dark font-bold bg-orange-light py-2 px-3 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50"
-            data-id="3">
-            dummy button
-        </button>
-
         <div class="pt-6 flex flex-wrap items-center justify-center gap-10" id="message-cards">
             <!-- start card -->
             <!-- end card -->
@@ -112,7 +106,7 @@
                     <div class="flex items-start justify-between w-full">
                         <div class="pl-2 w-full">
                             <p class="focus:outline-none text-xl font-bold leading-5 text-brokenwhite">${data.fields.author_name}</p>
-                            <p class="focus:outline-none text-sm leading-normal pt-2 text-brokenwhite">${data.fields.donation_name}</p>
+                            <p class="focus:outline-none text-sm leading-normal text-brokenwhite">${data.fields.donation_name}</p>
                         </div>
     
                     </div>
@@ -121,14 +115,14 @@
                     <p class="focus:outline-none text-md leading-5 text-brokenwhite overflow-y-auto h-24">${data.fields.message}</p>
                     <p class="focus:outline-none text-xs leading-normal pb-2 text-brokenwhite font-mono">${data.fields.date_created}</p>
                     <div class="flex items-start justify-between w-full">
-                        
-                            <button id="btnLike"
-                                class="text-orange-dark font-bold bg-orange-light py-2 px-3 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50"
-                                data-id="${data.pk}">
-                                Like This Post
-                            </button>
+ 
+                        <button
+                            class="text-orange-dark font-bold bg-orange-light py-2 px-3 rounded hover:scale-105 hover:shadow-md transition-all hover:shadow-brokenwhite/50"
+                            id="post-${data.pk}" onclick="likePost(${data.pk})">
+                            Like This Post
+                        </button>
 
-                        <p class="text-orange-light py-2 text-xl">${data.fields.likes.length} ❤</p>
+                        <p class="text-orange-light py-2 pl-2 text-xl">${data.fields.likes.length} ❤</p>
                     </div>
                 </div>
             </div>`;
@@ -143,7 +137,7 @@
             url: "json/",
             success: data => {
                 render(data);
-                console.log(data)
+                // console.log(data)
             },
             error: err => {
                 console.log(err);
@@ -172,9 +166,7 @@
         });
     }
 
-    function likePost(e) {
-        e.preventDefault()
-        const id = $(e.target).data("id")
+    function likePost(id) {
         $.ajax({
             type: "POST",
             url: 'like-post/',
@@ -190,9 +182,6 @@
     $(document).ready(() => {
         getPost()
         $("#btnSubmit").click(addPost)
-
-
     });
-    $("#btnLike").click(likePost)
 </script>
 {% endblock content %}

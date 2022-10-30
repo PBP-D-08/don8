@@ -5,26 +5,30 @@ from django.core import serializers
 from supportmsg.models import Post
 from homepage.models import Donation
 from supportmsg.forms import PostForm
-import json
+from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
+@login_required(login_url="/auth/login/")
 def show_support(request):
     form = PostForm()
     all_donation = Donation.objects.all()
     context = {
         'donations' : all_donation,
-        'form' : form
+        'form' : form,
     }
     return render(request, 'support.html', context)
 
+@login_required(login_url="/auth/login/")
 def show_json(request):
     data_post = Post.objects.all()
     # tes = Post.objects.filter(author__username = "akunbaru")
     return HttpResponse(serializers.serialize("json", data_post), content_type="application/json")
 
+@login_required(login_url="/auth/login/")
 def add_message(request):
-    if request.method == "POST":
+    form = PostForm(request.POST)
+    if request.method == "POST" and form.is_valid():
         post = Post(
             author=request.user,
             author_name=request.user.username,
@@ -34,8 +38,9 @@ def add_message(request):
         post.save()
         return HttpResponse(serializers.serialize("json", [post]), content_type="application/json")
 
-    return HttpResponse("Invalid", status_code=405)
+    return HttpResponse(content_type="application/json")
 
+@login_required(login_url="/auth/login/")
 def like_post(request):
     if request.method == "POST":
         id = request.POST.get("post_id")

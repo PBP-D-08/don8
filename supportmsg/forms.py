@@ -1,5 +1,3 @@
-from email import message
-from unittest import result
 from django import forms
 from homepage.models import Donation
 
