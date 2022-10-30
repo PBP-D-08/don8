@@ -4,12 +4,19 @@ from django.http import HttpResponse,JsonResponse
 from django.core import serializers
 from supportmsg.models import Post
 from homepage.models import Donation
+from supportmsg.forms import PostForm
 import json
 
 
 # Create your views here.
 def show_support(request):
-    return render(request, 'support.html')
+    form = PostForm()
+    all_donation = Donation.objects.all()
+    context = {
+        'donations' : all_donation,
+        'form' : form
+    }
+    return render(request, 'support.html', context)
 
 def show_json(request):
     data_post = Post.objects.all()
@@ -21,6 +28,7 @@ def add_message(request):
         post = Post(
             author=request.user,
             author_name=request.user.username,
+            donation_name = request.POST["donation_name"],
             message=request.POST["message"],
         )
         post.save()
@@ -31,8 +39,9 @@ def add_message(request):
 def like_post(request):
     if request.method == "POST":
         id = request.POST.get("post_id")
+        # print(id)
         post = Post.objects.filter(pk=id)[0]
-        print(post)
+        # print(post)
         if not post.likes.filter(pk=request.user.pk).exists():
             post.likes.add(request.user)
             post.save()

@@ -10,37 +10,14 @@
             class="text-brokenwhite bg-green-medium py-2 px-3 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50">
             Give Support
         </button>
+        <button id="btnLike"
+            class="text-orange-dark font-bold bg-orange-light py-2 px-3 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50"
+            data-id="3">
+            dummy button
+        </button>
 
         <div class="pt-6 flex flex-wrap items-center justify-center gap-10" id="message-cards">
             <!-- start card -->
-            <!-- <div
-                class="p-6 max-w-sm min-w-[20%] rounded-lg shadow-lg hover:shadow-xl hover:shadow-green-light bg-green-medium py-4 px-3 hover:scale-105 transition-all">
-                <div class="flex items-center pb-2">
-                    <div class="flex items-start justify-between w-full">
-                        <div class="pl-2 w-full">
-                            <p class="focus:outline-none text-xl font-bold leading-5 text-brokenwhite">Author</p>
-                            <p class="focus:outline-none text-sm leading-normal pt-2 text-brokenwhite">nama charity</p>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="px-2">
-                    <p class="focus:outline-none text-md leading-5 text-brokenwhite overflow-y-scroll h-24">Addddddddddddddddddddddddddddddddddddddddddddd
-                        dddddddddd ddddddd dddddddddd dddddddddd dddddddddd dddddddddd dddddddddd dddddddddd dddddddddd
-                        dddddddddd dddddddddd dddddddddd dddddddddd dddddddddd dddddddddd dddddddddd dddddddddd
-                        ddddddddddd ddddddddddddd wdwwwwwwwwwsh.</p>
-                    <p class="focus:outline-none text-xs leading-normal pb-2 text-brokenwhite font-mono">21-10-03</p>
-                    <div class="flex items-start justify-between w-full">
-                        <button
-                            class="text-orange-dark font-bold bg-orange-light py-2 px-3 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50"
-                            id="btn-like">
-                            Like This Post
-                        </button>
-                        <p class="text-orange-light py-2 text-xl">8 ❤</p>
-                    </div>
-                </div>
-            </div> -->
-
             <!-- end card -->
         </div>
     </div>
@@ -76,12 +53,24 @@
                     </div>
                     <!-- Modal body -->
 
-                    <div class="p-6 space-y-6">
-                        <!-- Message input -->
+                    <div class="p-6 ">
+                        <!-- input -->
+                        <h5 class="text-green-dark font-bold text-left">Donation Name</h5>
                         <div class="md:flex md:items-center mb-6">
-                            <textarea
+                            {{form.donation_name}}
+                            <!-- <select name="donation-name" id="id_donation-name" required
+                            class="col-span-2 form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none">
+                            {% for name in donations %}
+                            <option value={{name.title}}>{{name.title}}</option>
+                            {% endfor %} -->
+                            </select>
+                        </div>
+                        <h5 class="text-green-dark font-bold text-left">Message</h5>
+                        <div class="md:flex md:items-center mb-6">
+                            {{form.message}}
+                            <!-- <textarea
                                 class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-brokenwhite focus:border-green-medium"
-                                id="id_message" name="message"></textarea>
+                                id="id_message" name="message"></textarea> -->
                         </div>
                     </div>
 
@@ -123,7 +112,7 @@
                     <div class="flex items-start justify-between w-full">
                         <div class="pl-2 w-full">
                             <p class="focus:outline-none text-xl font-bold leading-5 text-brokenwhite">${data.fields.author_name}</p>
-                            <p class="focus:outline-none text-sm leading-normal pt-2 text-brokenwhite">nama charity</p>
+                            <p class="focus:outline-none text-sm leading-normal pt-2 text-brokenwhite">${data.fields.donation_name}</p>
                         </div>
     
                     </div>
@@ -132,12 +121,14 @@
                     <p class="focus:outline-none text-md leading-5 text-brokenwhite overflow-y-auto h-24">${data.fields.message}</p>
                     <p class="focus:outline-none text-xs leading-normal pb-2 text-brokenwhite font-mono">${data.fields.date_created}</p>
                     <div class="flex items-start justify-between w-full">
-                        <button id="btnLike"
-                            class="text-orange-dark font-bold bg-orange-light py-2 px-3 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50"
-                            data-id="${data.pk}">
-                            Like This Post
-                        </button>
-                            
+                        <form action="/message/like-post/" method="POST">
+                            {% csrf_token %}
+                            <button id="btnLike"
+                                class="text-orange-dark font-bold bg-orange-light py-2 px-3 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50"
+                                data-id="${data.pk}">
+                                Like This Post
+                            </button>
+                            </form>   
                         <p class="text-orange-light py-2 text-xl">${data.fields.likes.length} ❤</p>
                     </div>
                 </div>
@@ -200,9 +191,9 @@
     $(document).ready(() => {
         getPost()
         $("#btnSubmit").click(addPost)
-        $("#btnLike").click(likePost)
 
 
     });
+    $("#btnLike").click(likePost)
 </script>
 {% endblock content %}
