@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "homepage",
     "authentication",
     "saved",
+    "supportmsg",
     'donation_app',
 ]
 
