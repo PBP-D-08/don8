@@ -17,6 +17,7 @@ def show_donation_page(request, id):
 
 
 # fungsi buat update wallet user dan cek apakah mencukupi atau tidak
+@login_required(login_url="/auth/login/")
 def make_donation(request, id):
     form = DonationForm(request.POST or None)
     if request.POST and form.is_valid():
@@ -24,6 +25,7 @@ def make_donation(request, id):
         return JsonResponse(data)
 
 
+@login_required(login_url="/auth/login/")
 def show_json(request):
     donations = Donation.objects.all()
     donations_dict = []
@@ -55,6 +57,7 @@ def show_json(request):
 
 
 # mengambil data donasi dalam json by id
+@login_required(login_url="/auth/login/")
 def get_donation_data(request, id):
     donation_data = Donation.objects.filter(
         id=id
@@ -64,6 +67,7 @@ def get_donation_data(request, id):
     )
 
 
+@login_required(login_url="/auth/login/")
 def get_organization_data(request, id):
     organization_data = User.objects.filter(id=id)
     return HttpResponse(

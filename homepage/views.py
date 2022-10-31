@@ -2,6 +2,7 @@ from datetime import datetime
 from django.http import JsonResponse
 from django.shortcuts import render
 from homepage.models import Donation
+from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
@@ -9,6 +10,7 @@ def index(request):
     return render(request, "index.html")
 
 
+@login_required(login_url="/auth/login/")
 def add_ajax_donation(request):
     if request.method == "POST":
         title = request.POST.get("title")
