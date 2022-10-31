@@ -11,11 +11,12 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        ("homepage", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name="Donation",
+            name="SavedDonation",
             fields=[
                 (
                     "id",
@@ -26,17 +27,19 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                ("title", models.CharField(max_length=255)),
-                ("description", models.TextField()),
-                ("date_created", models.DateField()),
-                ("date_expired", models.DateField()),
-                ("money_accumulated", models.IntegerField(default=0)),
-                ("money_needed", models.IntegerField(default=0)),
-                ("image_url", models.TextField()),
+                (
+                    "donation",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="saved",
+                        to="homepage.donation",
+                    ),
+                ),
                 (
                     "user",
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
+                        related_name="saved",
                         to=settings.AUTH_USER_MODEL,
                     ),
                 ),

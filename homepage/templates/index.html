@@ -1,63 +1,14 @@
 {% extends 'base.html' %} {% load static %} {% block meta %}
 <title>Don8</title>
 {% endblock meta %} {% block content %}
-<script>
-  $(document).ready(() => {
-    const card = data => `
-    <div
-      class="rounded-lg shadow-lg bg-green-medium py-4 px-3 hover:scale-105 transition-all"
-    >
-      <div class="max-w-[250px] min-h-[150px] text-center text-brokenwhite">
-        <div
-          class="w-[250px] h-[150px] rounded bg-cover bg-center"
-          style="
-            background-image: url(${data.fields.image_url});
-          "
-        ></div>
-        <p class="font-bold text-orange-light mt-4">${data.fields.title}</p>
-        <p class="font-bold">
-          <span class="text-orange-light">Rp</span> ${
-            data.fields.money_accumulated
-          }
-          <span class="text-orange-light font-normal text-xs">terkumpul</span>
-        </p>
-        <div class="h-3 bg-brokenwhite rounded-full mt-4">
-          <div class="h-3 bg-orange-medium rounded-full w-[${
-            (100 * data.fields.money_accumulated) / data.fields.money_needed
-          }%]"></div>
-        </div>
-        <button
-          class="text-orange-dark font-bold bg-orange-light py-2 px-3 mt-4 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50"
-          onclick="location.href='/donation/${data.pk}'"
-        >
-          Donasi
-        </button>
-      </div>
-    </div>`;
-
-    const render = data => {
-      const cards = data.map(card).join("");
-      $("#donations-card").html(cards);
-    };
-
-    $.ajax({
-      url: "/donation",
-      type: "GET",
-      success: data => {
-        render(data);
-      },
-      error: err => {
-        console.log(err);
-      },
-    });
-  });
-</script>
 <div class="bg-brokenwhite min-h-screen">
   <div
-    class="max-w-[80%] mx-auto min-h-screen flex items-center justify-between gap-10"
+    class="max-w-[80%] mx-auto min-h-screen flex flex-col-reverse md:flex-row items-center justify-center md:justify-between gap-5 pt-10 md:pt-0 md:gap-10"
   >
-    <div>
-      <h1 class="font-bold text-green-dark text-[100px]">Don8</h1>
+    <div class="text-center md:text-left">
+      <h1 class="font-bold text-green-dark text-[50px] md:text-[100px]">
+        Don8
+      </h1>
       <p class="text-green-dark mb-[30px] text-justify">
         Sebuah platform donasi online yang menghubungkan donatur dengan
         organisasi, dimana organisasi dapat mendaftarkan kegiatan penggalangan
@@ -65,18 +16,18 @@
         menggalang dana dan masyarakat umum untuk melakukan donasi.
       </p>
       <button
-        class="text-brokenwhite bg-green-medium py-4 px-5 rounded-lg hover:scale-110 hover:shadow-lg transition-all hover:shadow-gree-medium/70 text-[25px]"
+        class="text-brokenwhite bg-gradient-to-r from-green-dark to-green-medium py-4 px-5 rounded-lg hover:scale-110 hover:shadow-lg transition-all hover:shadow-gree-medium/70 text-[25px]"
         onclick="const offset=document.getElementById('donations')?.offsetTop; window.scrollTo({top: offset===undefined?offset:offset-50, behavior:'smooth'})"
       >
         <div class="flex items-center gap-3">
-          <p>Donate Sekarang</p>
+          <p class="text-sm md:text-lg">Donate Sekarang</p>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
             stroke-width="1.5"
             stroke="currentColor"
-            class="w-6 h-6"
+            class="w-6 h-6 animate-bounce"
           >
             <path
               stroke-linecap="round"
@@ -96,6 +47,7 @@
     <h1 class="text-green-dark text-[50px] font-bold mb-10 text-center">
       Donations
     </h1>
+    <div id="no-donation"></div>
     <div
       class="flex flex-wrap items-center justify-center gap-10"
       id="donations-card"
@@ -162,6 +114,7 @@
                   class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-brokenwhite focus:border-green-medium"
                   id="title"
                   type="text"
+                  required
                 />
               </div>
             </div>
@@ -180,6 +133,7 @@
                   class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-brokenwhite focus:border-green-medium"
                   id="description"
                   type="text"
+                  required
                 />
               </div>
             </div>
@@ -198,6 +152,7 @@
                   class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-brokenwhite focus:border-green-medium"
                   id="date_expired"
                   type="date"
+                  required
                 />
               </div>
             </div>
@@ -216,6 +171,26 @@
                   class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-brokenwhite focus:border-green-medium"
                   id="image_url"
                   type="text"
+                  required
+                />
+              </div>
+            </div>
+            <!-- Money Needed -->
+            <div class="md:flex md:items-center mb-6">
+              <div class="md:w-1/3">
+                <label
+                  class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
+                  for="money_needed"
+                >
+                  Money Needed
+                </label>
+              </div>
+              <div class="md:w-2/3">
+                <input
+                  class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-brokenwhite focus:border-green-medium"
+                  id="money_needed"
+                  type="number"
+                  required
                 />
               </div>
             </div>
@@ -223,28 +198,25 @@
 
           <!-- Modal footer -->
           <div
-            class="w-[250px] h-[150px] rounded bg-cover bg-center"
-            style="
-              background-image: url(https://divedigital.id/wp-content/uploads/2022/10/Gambar-Denji-Chainsaw-Man.jpg);
-            "
-          ></div>
-          <p class="font-bold text-orange-light mt-4">Judul</p>
-          <p class="font-bold">
-            <span class="text-orange-light">Rp</span> 500.500.500
-            <span class="text-orange-light font-normal text-xs">terkumpul</span>
-          </p>
-          <div class="h-3 bg-brokenwhite rounded-full mt-4">
-            <div class="h-3 bg-orange-medium rounded-full w-[30%]"></div>
-          </div>
-          <button
-            class="text-orange-dark font-bold bg-orange-light py-2 px-3 mt-4 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50"
-            onclick="location.href='/donations/id'"
+            class="flex items-center justify-center p-6 space-x-2 rounded-b border-t border-gray-200"
           >
-            Donasi
-          </button>
+            <button
+              data-modal-toggle="defaultModal"
+              type="submit"
+              class="text-brokenwhite bg-green-medium py-2 px-3 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50"
+            >
+              Create
+            </button>
+            <button
+              data-modal-toggle="defaultModal"
+              type="button"
+              class="classtutup text-white bg-orange-medium transition-all rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:scale-110 focus:z-10"
+            >
+              Cancel
+            </button>
+          </div>
         </div>
-      </div>
-      <!-- end card -->
+      </form>
     </div>
   </div>
   <!-- end modal -->
@@ -261,17 +233,118 @@
   $("#create-donation").click(openModal);
   $(".classtutup").click(closeModal);
 
+  const updateSaved = id => {
+    const csrftoken = document.querySelector(
+      "[name=csrfmiddlewaretoken]"
+    ).value;
+    $.ajax({
+      url: "/saved/",
+      type: "POST",
+      headers: { "X-CSRFToken": csrftoken }, // give CSRF token to the header
+      mode: "same-origin", // Do not send CSRF token to another domain.
+      data: {
+        id: id,
+      },
+      success: response => {
+        if (response.status == 200) {
+          $(`#saved-${id}`).html(`
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  class="w-7 h-7"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M6.32 2.577a49.255 49.255 0 0111.36 0c1.497.174 2.57 1.46 2.57 2.93V21a.75.75 0 01-1.085.67L12 18.089l-7.165 3.583A.75.75 0 013.75 21V5.507c0-1.47 1.073-2.756 2.57-2.93z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              `);
+        } else {
+          $.ajax({
+            url: `/saved/delete/${id}/`,
+            type: "DELETE",
+            headers: { "X-CSRFToken": csrftoken }, // give CSRF token to the header
+            mode: "same-origin", // Do not send CSRF token to another domain.
+            success: Response => {
+              if (Response.status == 200) {
+                $(`#saved-${id}`).html(`
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-7 h-7"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z"
+                      />
+                    </svg>
+                  `);
+              }
+            },
+          });
+        }
+      },
+      error: error => {
+        console.log(error);
+      },
+    });
+  };
+
+  $(document).ready(() => {
+    const render = data => {
+      const cards = data.map(card).join("");
+      $("#donations-card").html(cards);
+    };
+
+    $.ajax({
+      url: "/donation",
+      type: "GET",
+      success: data => {
+        data.sort((a, b) => {
+          const dateA = new Date(a.fields.date_expired);
+          const dateB = new Date(b.fields.date_expired);
+          return dateA - dateB;
+        });
+        if (data.length == 0) {
+          $("#no-donation").html(
+            "<div class='text-center text-green-dark text-[15px] md:text-[20px] '>Maaf, saat ini sedang tidak tersedia donasi apapun.</div>"
+          );
+        } else {
+          render(data);
+        }
+      },
+      error: err => {
+        console.log(err);
+      },
+    });
+  });
+
   $(document).on("submit", "#post-form", function (e) {
+    e.preventDefault();
     $.ajax({
       type: "POST",
-      url: "/",
+      url: "{% url 'homepage:add_ajax_donation' %}",
+      dataType: "json",
       data: {
         title: $("#title").val(),
         description: $("#description").val(),
         date_expired: $("#date_expired").val(),
         image_url: $("#image_url").val(),
+        money_needed: $("#money_needed").val(),
         csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
         action: "post",
+      },
+      success: function (data) {
+        $("#post-form").trigger("reset");
+        closeModal();
+        $("#donations-card").prepend(card(data));
+        $("#no-donation").empty();
       },
     });
   });
