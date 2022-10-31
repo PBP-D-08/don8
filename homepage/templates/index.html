@@ -6,9 +6,16 @@
     class="max-w-[80%] mx-auto min-h-screen flex flex-col-reverse md:flex-row items-center justify-center md:justify-between gap-5 pt-10 md:pt-0 md:gap-10"
   >
     <div class="text-center md:text-left">
-      <h1 class="font-bold text-green-dark text-[50px] md:text-[100px]">
-        Don8
-      </h1>
+      <div class="flex gap-4 items-center justify-center md:justify-start">
+        <img
+          src="{% static 'homepage/logo.svg' %}"
+          class="h-10 sm:h-28"
+          alt="Flowbite Logo"
+        />
+        <h1 class="font-bold text-green-dark text-[50px] md:text-[100px]">
+          Don8
+        </h1>
+      </div>
       <p class="text-green-dark mb-[30px] text-justify">
         Sebuah platform donasi online yang menghubungkan donatur dengan
         organisasi, dimana organisasi dapat mendaftarkan kegiatan penggalangan
@@ -61,8 +68,6 @@
   <!-- Main modal -->
   <div
     id="defaultModal"
-    tabindex="-1"
-    aria-hidden="true"
     class="w-full fixed flex justify-center w-full z-10 min-h-screen items-center bg-green-dark bg-opacity-50 hidden inset-0 h-modal md:h-full"
   >
     <div class="relative p-4 w-full max-w-2xl h-full md:h-auto">
@@ -72,16 +77,14 @@
         <div class="relative bg-brokenwhite rounded-lg shadow">
           <!-- Modal header -->
           <div class="flex justify-between items-start p-4 rounded-t border-b">
-            <h3 class="text-xl font-semibold text-gray-900">
+            <h3 class="text-xl font-semibold text-green-dark">
               Create new donation
             </h3>
             <button
               type="button"
               class="classtutup text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
-              data-modal-toggle="defaultModal"
             >
               <svg
-                aria-hidden="true"
                 class="w-5 h-5"
                 fill="currentColor"
                 viewBox="0 0 20 20"
@@ -200,20 +203,16 @@
           <div
             class="flex items-center justify-center p-6 space-x-2 rounded-b border-t border-gray-200"
           >
-            <button
-              data-modal-toggle="defaultModal"
-              type="submit"
+            <div
               class="text-brokenwhite bg-green-medium py-2 px-3 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50"
             >
-              Create
-            </button>
-            <button
-              data-modal-toggle="defaultModal"
-              type="button"
-              class="classtutup text-white bg-orange-medium transition-all rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:scale-110 focus:z-10"
+              <button type="submit">Create</button>
+            </div>
+            <div
+              class="text-white bg-orange-medium transition-all rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:scale-110 focus:z-10"
             >
-              Cancel
-            </button>
+              <button type="button" class="classtutup">Cancel</button>
+            </div>
           </div>
         </div>
       </form>

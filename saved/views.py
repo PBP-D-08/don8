@@ -58,6 +58,7 @@ def create_saved(request):
     return HttpResponse("This page is not available.")
 
 
+@login_required(login_url="/auth/login/")
 def delete_saved(request, donation_id):
     if request.user.role != User.USER:
         return HttpResponse("You are not authorized to delete.")
