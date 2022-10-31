@@ -55,6 +55,12 @@
         >don8</a
       >
       <div class="flex gap-10 items-center text-green-medium font-bold">
+        <a
+          id="donation-history"
+          class="hover:scale-110 transition-all cursor-pointer"
+          href="{% url 'supportmsg:show_support' %}"
+          >Messages</a
+        >
         {% if request.user.is_authenticated and request.user.role == 1 %}
         <a
           id="donation-history"
