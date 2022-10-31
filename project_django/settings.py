@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "authentication",
     "saved",
     "supportmsg",
+    'donation_app',
 ]
 
 AUTH_USER_MODEL = "authentication.User"

@@ -22,6 +22,7 @@ urlpatterns = [
     path("auth/", include("authentication.urls")),
     path("saved/", include("saved.urls")),
     path("message/", include("supportmsg.urls")),
+    path('donation/', include('donation_app.urls'))
 ]
 
 # TODO: Implement Routings Here
