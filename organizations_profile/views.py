@@ -13,9 +13,17 @@ from organizations_profile.forms import WithdrawForm
 # Create your views here.
 def organizations_profile(request, id):
     profiles = list(User.objects.filter(username=id))
+
     for i in profiles:
         profile = i
     org_profile = Profile.objects.get(organization=profile)
+    donations = Donation.objects.filter(user=profile)
+    for i in donations:
+        i.org_name = profile.username
+        i.save()
+    org_profile.total_campaign = len(donations)
+    org_profile.save()
+
     if request.method == "POST":
         form = WithdrawForm(request.POST)
         if form.is_valid():
@@ -49,11 +57,52 @@ def show_json(request, id):
         profile = i
     org_profile = Profile.objects.get(organization=profile)
     donations = Donation.objects.filter(user=profile)
-    for i in donations:
-        i.org_name = profile.username
-        i.save()
-    org_profile.total_campaign = len(donations)
-    org_profile.save()
+
+    return HttpResponse(
+        serializers.serialize("json", donations), content_type="application/json"
+    )
+
+def show_jsoncomp(request, id):
+    profile = list(User.objects.filter(username=id))
+    for i in profile:
+        profile = i
+    org_profile = Profile.objects.get(organization=profile)
+    donation = Donation.objects.filter(user=profile)
+    donations = []
+    for i in donation:
+        if i.money_accumulated >= i.money_needed:
+            donations.append(i)
+
+
+    return HttpResponse(
+        serializers.serialize("json", donations), content_type="application/json"
+    )
+
+def show_jsonexp(request, id):
+    profile = list(User.objects.filter(username=id))
+    for i in profile:
+        profile = i
+    org_profile = Profile.objects.get(organization=profile)
+    donation = Donation.objects.filter(user=profile)
+    donations =[]
+    for i in donation:
+        if i.date_expired < datetime.now().date():
+            donations.append(i)
+
+    return HttpResponse(
+        serializers.serialize("json", donations), content_type="application/json"
+    )
+
+def show_jsonpro(request, id):
+    profile = list(User.objects.filter(username=id))
+    for i in profile:
+        profile = i
+    org_profile = Profile.objects.get(organization=profile)
+    donation = Donation.objects.filter(user=profile)
+    donations = []
+    for i in donation:
+        if i.date_expired > datetime.now().date():
+            donations.append(i)
 
     return HttpResponse(
         serializers.serialize("json", donations), content_type="application/json"

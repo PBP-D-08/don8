@@ -55,7 +55,7 @@
                     render(data);
                 } else {
                     $("#donations-card").html(
-                        `<p class="text-center text-orange-dark">Tidak ada donasi yang tersedia :(</p>`
+                        `<div class='text-center text-green-dark text-[15px] md:text-[20px] '>Maaf, saat ini sedang tidak tersedia donasi apapun.</div>`
                     );
                 }
             },
@@ -91,32 +91,33 @@
         >
             <div>
                 <h1 class="font-bold text-green-dark text-[100px]">{{ profile.username }}</h1>
-                <div class="flex items-center gap-4">
-                    <div class="flex">
-                        <p class="font-bold text-green-light mb-[30px] text-[50px] text-justify">Rp </p>
-                        <p class="text-green-dark font-bold mb-[30px] text-[50px] text-justify" id="money">{{ org_profile.withdrawn }}</p>
-                        <p class="font-bold text-green-light mb-[30px] text-[50px] text-justify">.00</p>
-                    </div>
-                    <p class="text-green-dark font-bold mb-[30px] text-[50px] text-justify"> / </p>
-                    <div class="flex">
-                        <p class="font-bold text-green-light mb-[30px] text-[50px] text-justify">Rp </p>
-                        <p class="text-green-dark font-bold mb-[30px] text-[50px] text-justify">{{ profile.balance }}</p>
-                        <p class="font-bold text-green-light mb-[30px] text-[50px] text-justify">.00</p>
-                    </div>
+                <div class="flex items-center">
+                    <h3 class="font-bold text-green-light text-[45px]">Telah berhasil &nbsp</h3>
+                    <h3 class="font-bold text-green-dark text-[50px]">mengumpulkan</h3>
+                </div>
+                <div class="flex items-center">
+                    <p class="font-bold text-green-light text-[40px] text-justify">Rp &nbsp</p>
+                    <p class="text-green-dark font-bold text-[50px] text-justify">{{ profile.balance }}</p>
+                    <p class="font-bold text-green-light text-[40px] text-justify">.00</p>
+                </div>
+                <div class="flex items-center">
+                    <p class="font-bold text-green-light mb-[30px] text-[45px] text-justify"> Dari &nbsp</p>
+                    <p class="font-bold text-green-dark mb-[30px] text-[50px] text-justify">{{ org_profile.total_campaign }}</p>
+                    <p class="font-bold text-green-light mb-[30px] text-[45px] text-justify"> &nbsp penggalangan dana</p>
                 </div>
                 <button
-                        class="text-brokenwhite bg-green-medium py-4 px-5 rounded-lg hover:scale-110 hover:shadow-lg transition-all hover:shadow-gree-medium/70 text-[25px]"
+                        class="text-brokenwhite bg-gradient-to-r from-green-dark to-green-medium py-4 px-5 rounded-lg hover:scale-110 hover:shadow-lg transition-all hover:shadow-gree-medium/70 text-[25px]"
                         id="withdraw"
                 >
                     <div class="flex items-center gap-3">
-                        <p>Withdraw</p>
+                        <p class="text-sm md:text-lg">Withdraw</p>
                         <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
                                 viewBox="0 0 24 24"
                                 stroke-width="1.5"
                                 stroke="currentColor"
-                                class="w-6 h-6"
+                                class="w-6 h-6 animate-bounce"
                         >
                             <path
                                     stroke-linecap="round"
@@ -127,12 +128,62 @@
                     </div>
                 </button>
             </div>
-        </div>
+            <div
+                    class="rounded-lg shadow-lg bg-green-medium py-4 px-3 hover:scale-150 transition-all"
+            >
+                <div class="min-w-[250px] max-h-[150px] text-center text-brokenwhite">
+                    <p class="font-bold text-orange-light text-[25px] mt-4 mb-2">Catatan Keuangan</p>
+                    <p class="font-bold text-[15px] mb-1">
+                        <span class="text-orange-light">Rp &nbsp</span>
+                        {{ profile.balance }}
+                        <span class="text-orange-light font-normal text-xs">.00 terkumpul</span>
+                    </p>
+                    <p class="font-bold mb-4 text-[15px]" id="money">
+                        <span class="text-orange-light">Rp &nbsp</span>
+                        {{ org_profile.withdrawn }}
+                        <span class="text-orange-light font-normal text-xs">.00 ditarik</span>
+                    </p>
+                    <!-- comment -->
+                    {% if user.username != profile.username  %}
+                        <button
+                                class="text-orange-dark font-bold bg-orange-light py-2 px-3 mt-4 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50"
+                                id="donate_button"
+                                onclick= "location.href='/donation/${data.pk}'"
+                        >
+                            Donasi
+                        </button>
+                    {% endif %}
+                    <!-- endcomment -->
+                </div>
+            </div>
+        </div> <!-- organizations profile -->
 
         <div class="max-w-[80%] mx-auto min-h-screen py-20" id="donations">
             <h1 class="text-green-dark text-[50px] font-bold mb-10 text-center">
                 Our Campaigns
             </h1>
+
+            <div class="flex flex-wrap items-center justify-center mb-10"
+                 role="group"
+            >
+                <button type="button" id="all-button"
+                        class="py-4 px-6 text-sm font-medium text-brokenwhite bg-brokenwhite rounded-l-lg border border-green-dark hover:bg-green-medium hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-brokenwhite dark:bg-green-medium dark:border-green-dark dark:text-brokenwhite dark:hover:text-brokenwhite dark:hover:bg-green-dark dark:focus:ring-green-dark dark:focus:text-brokenwhite">
+                    All
+                </button>
+                <button type="button" id="completed-button"
+                        class="py-4 px-6 text-sm font-medium text-brokenwhite bg-brokenwhite border-t border-b border-green-dark hover:bg-green-medium hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-brokenwhite dark:bg-green-medium dark:border-green-dark dark:text-brokenwhite dark:hover:text-brokenwhite dark:hover:bg-green-dark dark:focus:ring-green-dark dark:focus:text-brokenwhite">
+                    Completed
+                </button>
+                <button type="button" id="expired-button"
+                        class="py-4 px-6 text-sm font-medium text-brokenwhite bg-brokenwhite border-t border-b border-green-dark hover:bg-green-medium hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-brokenwhite dark:bg-green-medium dark:border-green-dark dark:text-brokenwhite dark:hover:text-brokenwhite dark:hover:bg-green-dark dark:focus:ring-green-dark dark:focus:text-brokenwhite">
+                    Expired
+                </button>
+                <button type="button" id="progress-button"
+                        class="py-4 px-6 text-sm font-medium text-brokenwhite bg-brokenwhite rounded-r-md border border-green-dark hover:bg-green-medium hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-brokenwhite dark:bg-green-medium dark:border-green-dark dark:text-brokenwhite dark:hover:text-brokenwhite dark:hover:bg-green-dark dark:focus:ring-green-dark dark:focus:text-brokenwhite">
+                    In Progress
+                </button>
+            </div>
+
             <div
                     class="flex flex-wrap items-center justify-center gap-10"
                     id="donations-card"
@@ -182,7 +233,6 @@
                     <!-- Modal body -->
 
                     <div class="p-6 space-y-6">
-                        <!-- Title input -->
 
                         <div class="md:flex md:items-center mb-6">
 
@@ -237,7 +287,7 @@
                 </div>
             </form>
         </div>
-    </div>
+    </div> <!--modal-->
 </div>
 <script>
     const openModal = e => {
@@ -264,10 +314,131 @@
             success: function (response) {
                 $("#post-form").trigger("reset");
                 closeModal();
-                document.getElementById("money").innerHTML = response.profile_w;
+                document.getElementById("money").innerHTML = `
+                <span class="text-orange-light">Rp</span>
+                        ${response.profile_w}
+                <span class="text-orange-light font-normal text-xs">.00 ditarik</span>`;
             },
         })
 
+    });
+
+    const new_card = data => `
+            <div
+              class="rounded-lg shadow-lg bg-green-medium py-4 px-3 hover:scale-105 transition-all"
+            >
+              <div class="max-w-[250px] min-h-[150px] text-center text-brokenwhite">
+                <div
+                  class="w-[250px] h-[150px] rounded bg-cover bg-center"
+                  style="
+                    background-image: url(${data.fields.image_url});
+                  "
+                ></div>
+                <p class="font-bold text-orange-light mt-4">${data.fields.title}</p>
+                <p class="font-bold">
+                  <span class="text-orange-light">Rp</span> ${
+        data.fields.money_accumulated
+    }
+                  <span class="text-orange-light font-normal text-xs">terkumpul</span>
+                </p>
+                <div class="h-3 bg-brokenwhite rounded-full mt-4">
+                  <div class="h-3 bg-orange-medium rounded-full w-[${
+        (100 * data.fields.money_accumulated) / data.fields.money_needed
+    }%]"></div>
+                </div>
+                <!-- comment -->
+                {% if user.username != profile.username  %}
+                    <button
+                      class="text-orange-dark font-bold bg-orange-light py-2 px-3 mt-4 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50"
+                      id="donate_button"
+                      onclick= "location.href='/donation/${data.pk}'"
+                    >
+                      Donasi
+                    </button>
+                {% endif %}
+                <!-- endcomment -->
+              </div>
+            </div>`;
+
+    const render = data => {
+        const new_cards = data.map(new_card).join("");
+        $("#donations-card").html(new_cards);
+    };
+
+    $("#all-button").click(function (e){
+        $.ajax({
+            url: "donations",
+            type: "GET",
+            success: data => {
+                if (data.length > 0) {
+                    render(data);
+                } else {
+                    $("#donations-card").html(
+                        `<div class='text-center text-green-dark text-[15px] md:text-[20px] '>Maaf, saat ini sedang tidak tersedia donasi apapun.</div>`
+                    );
+                }
+            },
+            error: err => {
+                console.log(err);
+            },
+        });
+    });
+
+    $("#completed-button").click(function (e){
+        $.ajax({
+            url: "donationscomp",
+            type: "GET",
+            success: data => {
+                if (data.length > 0) {
+                    render(data);
+                } else {
+                    $("#donations-card").html(
+                        `<div class='text-center text-green-dark text-[15px] md:text-[20px] '>Maaf, saat ini sedang tidak tersedia donasi apapun.</div>`
+                    );
+                }
+            },
+            error: err => {
+                console.log(err);
+            },
+        });
+    });
+
+    $("#expired-button").click(function (e){
+        $.ajax({
+            url: "donationsexp",
+            type: "GET",
+            success: data => {
+                if (data.length > 0) {
+                    render(data);
+                } else {
+                    $("#donations-card").html(
+                        `<div class='text-center text-green-dark text-[15px] md:text-[20px] '>Maaf, saat ini sedang tidak tersedia donasi apapun.</div>`
+                    );
+                }
+            },
+            error: err => {
+                console.log(err);
+            },
+        });
+    });
+
+    $("#progress-button").click(function (e){
+        $.ajax({
+            url: "donationspro",
+            type: "GET",
+            success: data => {
+                if (data.length > 0) {
+                    render(data);
+                } else {
+                    $("#donations-card").html(
+                        `<div class='text-center text-green-dark text-[15px] md:text-[20px] '>Maaf, saat ini sedang tidak tersedia donasi apapun.</div>`
+                    );
+                }
+            },
+            error: err => {
+                console.log(err);
+            },
+        });
     });
 
 
