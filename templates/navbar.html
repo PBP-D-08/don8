@@ -1,0 +1,157 @@
+{% load static %}
+
+<script src="https://unpkg.com/flowbite@1.5.3/dist/flowbite.js"></script>
+
+<nav class="fixed w-full bg-green-medium border-gray-200 px-2 sm:px-4 py-2.5 z-10">
+  <div class="container flex flex-wrap justify-between items-center mx-auto">
+    <a href="/" class="flex items-center">
+      <img
+        src="{% static 'homepage/logo.svg' %}"
+        class="mr-3 h-6 sm:h-9 bg-brokenwhite p-1 rounded-full"
+        alt="Flowbite Logo"
+      />
+      <span
+        class="self-center text-xl text-brokenwhite font-semibold whitespace-nowrap hover:scale-110 transition-all"
+        >don8</span
+      >
+    </a>
+    {% if not request.user.is_authenticated %}
+    <button
+        id="login"
+        class="text-green-dark font-bold bg-gradient-to-r from-green-light to-brokenwhite md:order-2 py-2 px-3 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50"
+        onclick="location.href='/auth/login/'"
+    >
+        Login
+    </button>
+    {% else %}
+    <div class="flex items-center md:order-2">
+      <button
+        type="button"
+        class="flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300"
+        id="user-menu-button"
+        aria-expanded="false"
+        data-dropdown-toggle="user-dropdown"
+        data-dropdown-placement="bottom"
+      >
+        <span class="sr-only">Open user menu</span>
+        <div
+          class="font-bold text-green-dark hover:scale-110 transition-all cursor-pointer border-2 border-green-medium bg-gradient-to-r from-green-light to-brokenwhite p-2 rounded-full hover:shadow-md transition-all hover:shadow-brokenwhite/50"
+        >
+          {{ request.user.username }}
+        </div>
+      </button>
+      <!-- Dropdown menu -->
+      <div
+        class="hidden z-50 my-4 text-base list-none bg-brokenwhite rounded divide-y divide-green-light/25 shadow"
+        id="user-dropdown"
+        style="
+          position: absolute;
+          inset: 0px auto auto 0px;
+          margin: 0px;
+          transform: translate3d(0px, 109.585px, 0px);
+        "
+        data-popper-reference-hidden=""
+        data-popper-escaped=""
+        data-popper-placement="bottom"
+      >
+        <ul class="py-1" aria-labelledby="user-menu-button">
+          <li>
+            <a
+              href="/profile/{{ request.user.username }}"
+              class="block py-2 px-4 text-sm text-green-dark hover:bg-green-light/25"
+              >Profil</a
+            >
+          </li>
+          {% if user.is_authenticated and user.role == 1 and not user.is_superuser %}
+          <li>
+            <a
+              href="{% url 'saved:show_saved' request.user.username %}"
+              class="block py-2 px-4 text-sm text-green-dark hover:bg-green-light/25"
+              >Saved Donations</a
+            >
+          </li>
+          {% endif %}
+          {% if user.is_authenticated and user.role == 1 and not user.is_superuser %}
+          <li>
+            <a
+              href="#"
+              class="block py-2 px-4 text-sm text-green-dark hover:bg-green-light/25"
+              >Donations History</a
+            >
+          </li>
+          {% endif %}
+          {% if request.user.is_authenticated and request.user.role == 2 %}
+          <li>
+            <span
+              href=""
+              id="create-donation"
+              class="block py-2 px-4 text-sm text-green-dark hover:bg-green-light/25 cursor-pointer"
+              >Create a Donation
+            </span>
+          </li>
+          {% endif %}
+          <li>
+            <a
+              href="/auth/logout/"
+              class="block py-2 px-4 text-sm text-green-dark hover:bg-green-light/25"
+              >Logout</a
+            >
+          </li>
+        </ul>
+      </div>
+      <button
+        data-collapse-toggle="mobile-menu-2"
+        type="button"
+        class="inline-flex items-center p-2 ml-1 text-sm text-brokenwhite rounded-lg md:hidden hover:bg-green-light/25 focus:outline-none focus:ring-2 focus:ring-gray-200"
+        aria-controls="mobile-menu-2"
+        aria-expanded="false"
+      >
+        <span class="sr-only">Open main menu</span>
+        <svg
+          class="w-6 h-6"
+          aria-hidden="true"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+      </button>
+    </div>
+    {% endif %}
+    <div
+      class="hidden justify-between items-center w-full md:flex md:w-auto md:order-1"
+      id="mobile-menu-2"
+    >
+      <ul
+        class="flex flex-col p-4 mt-4 bg-gray-50 rounded-lg border border-green-light/25 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-green-light"
+      >
+        <li>
+          <a
+            href="/"
+            class="block py-2 pr-4 pl-3 text-green-dark rounded hover:bg-green-light/25 md:hover:bg-transparent md:hover:text-green-medium md:p-0 hover:scale-110 transition-all"
+            >Home</a
+          >
+        </li>
+        <li>
+          <a
+            href="{% url 'supportmsg:show_support' %}"
+            class="block py-2 pr-4 pl-3 text-green-dark rounded hover:bg-green-light/25 md:hover:bg-transparent md:hover:text-green-medium md:p-0 hover:scale-110 transition-all"
+            >Messages</a
+          >
+        </li>
+        <li>
+          <a
+            href="#"
+            class="block py-2 pr-4 pl-3 text-green-dark rounded hover:bg-green-light/25 md:hover:bg-transparent md:hover:text-green-medium md:p-0 hover:scale-110 transition-all"
+            >Leaderboard</a
+          >
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
