@@ -10,7 +10,6 @@ from django.core.serializers.json import DjangoJSONEncoder
 import json
 
 # Create your views here.
-@login_required(login_url="/auth/login/")
 def show_donation_page(request, id):
     context = {"form": DonationForm()}
     return render(request, "donation_page.html", context)
@@ -25,7 +24,6 @@ def make_donation(request, id):
         return JsonResponse(data)
 
 
-@login_required(login_url="/auth/login/")
 def show_json(request):
     donations = Donation.objects.all()
     donations_dict = []
@@ -57,7 +55,6 @@ def show_json(request):
 
 
 # mengambil data donasi dalam json by id
-@login_required(login_url="/auth/login/")
 def get_donation_data(request, id):
     donation_data = Donation.objects.filter(
         id=id
@@ -67,7 +64,6 @@ def get_donation_data(request, id):
     )
 
 
-@login_required(login_url="/auth/login/")
 def get_organization_data(request, id):
     organization_data = User.objects.filter(id=id)
     return HttpResponse(
