@@ -21,6 +21,7 @@ urlpatterns = [
     path("", include("homepage.urls")),
     path("auth/", include("authentication.urls")),
     path("profile/org/", include("organizations_profile.urls")),
+    path("saved/", include("saved.urls")),
 ]
 
 # TODO: Implement Routings Here
