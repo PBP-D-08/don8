@@ -100,14 +100,22 @@
           Login
         </button>
         {% endif %}
-        {% if request.user.is_authenticated %}
+        {% if request.user.is_authenticated and request.user.role == 2 %}
         <a
           a
           id="profile"
-          href="/profile/{{ request.user.username }}"
+          href="/profile/org/{{ request.user.username }}"
           class="hover:scale-110 transition-all cursor-pointer border-2 border-green-medium bg-gradient-to-r from-green-light to-brokenwhite p-2 rounded-full hover:shadow-md transition-all hover:shadow-brokenwhite/50"
         >{{ request.user.username }}</a>
         {% endif %}
+          {% if request.user.is_authenticated and request.user.role == 1 %}
+              <a
+                      a
+                      id="profile"
+                      href="/profile/user/{{ request.user.username }}"
+                      class="hover:scale-110 transition-all cursor-pointer border-2 border-green-medium bg-gradient-to-r from-green-light to-brokenwhite p-2 rounded-full hover:shadow-md transition-all hover:shadow-brokenwhite/50"
+              >{{ request.user.username }}</a>
+          {% endif %}
         {% if request.user.is_authenticated %}
         <button
           id="logout"
