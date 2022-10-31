@@ -29,6 +29,10 @@
     </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="{% static 'js/script.js' %}"></script>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/flowbite@1.5.3/dist/flowbite.min.css"
+    />
     {% block meta %} {% endblock meta %}
   </head>
 
@@ -44,7 +48,7 @@
   </script>
 
   <body>
-    <nav
+    <!-- <nav
       class="fixed flex w-full justify-between py-5 px-10 items-center bg-green-light shadow-lg shadow-green-dark/30 z-10"
     >
       <a
@@ -118,7 +122,9 @@
         </button>
         {% endif %}
       </div>
-    </nav>
-    {% block content %} {% endblock content %} {% include 'footer.html' %}
+    </nav> -->
+    {% include 'navbar.html' %}
+    {% block content %} {% endblock content %}
+    {% include 'footer.html' %}
   </body>
 </html>
