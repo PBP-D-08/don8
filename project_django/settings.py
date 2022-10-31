@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "homepage",
     "authentication",
+    "leaderboard"
 ]
 
 AUTH_USER_MODEL = "authentication.User"
