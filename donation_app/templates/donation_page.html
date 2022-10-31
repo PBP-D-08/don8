@@ -30,6 +30,12 @@
                 <div id = "progress_bar" class="h-3 bg-orange-medium rounded-full w-[${data.fields.money_accumulated / data.fields.money_needed > 1 ? 100 : 100 * data.fields.money_accumulated / data.fields.money_needed}%]">
                 </div>
             </div>
+            <div class="mt-3 flex flex-col items-center">
+                <span>
+                    <span class="text-orange-light text-lg">Berakhir pada</span>
+                    <span class="font-bold">${data.fields.date_expired}</span>
+                </span>
+            </div>
             <div class="flex flex-col items-center mt-1">
                 <button
                     class="text-orange-dark font-bold bg-orange-light py-2 px-3 mt-4 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50"
@@ -112,6 +118,15 @@
             $("#no-money-modal").addClass("hidden");
         };
 
+        const openExpiredModal = e => {
+            $("#expired-modal").removeClass("hidden");
+        };
+
+        const closeExpiredModal = e => {
+            $("#expired-modal").addClass("hidden");
+        };
+
+
         $("body").on('click', '#unauthorized-button', function () {
             closeUnauthorizedModal();
         });
@@ -120,6 +135,9 @@
             closeNoMoneyModal();
         });
 
+        $("body").on('click', '#expired-button', function () {
+            closeExpiredModal();
+        });
 
         $("body").on('click', '#make-donation-button', function () {
 
@@ -127,17 +145,47 @@
                 url: `/donation/check-user/`,
                 type: "GET",
                 success: user  => {
-
                     if (user["pengguna"]) {
-                        openDonationModal();
+
+                        $.ajax({
+                            url: `/donation/json-donation/${id}/`,
+                            type: "GET",
+                            success: donation => {
+
+                                $.ajax({
+                                    url: `/donation/get-current-date/`,
+                                    type: "GET",
+                                    success: date => {
+                                        const date_expired = donation[0].fields.date_expired.split("-");
+                                        const current_date = date["current_date"].split("-");
+
+                                        if (date_expired[0] < current_date[0] ||
+                                               date_expired[0] == current_date[0] && date_expired[1] < current_date[1] ||
+                                               date_expired[0] == current_date[0] && date_expired[1] == current_date[1] && date_expired[2] <= current_date[2]) { 
+                                            openExpiredModal();
+                                        } else {
+                                            openDonationModal();
+                                        }
+                                    },
+                                    error: err => {
+                                        console.log(err);
+                                    },
+                                });
+
+                            },
+                            error: err => {
+                                console.log(err);
+                            },
+                        });
+
                     } else {
                         openUnauthorizedModal();
                     }
                 },
-                    error: err => {
-                        console.log(err);
+                error: err => {
+                    console.log(err);
                 },
-            });
+            }); 
         });
 
         $("#close-icon").click(closeDonationModal);
@@ -225,6 +273,21 @@
         </div>
 
         <div class="flex gap-5 justify-center items-center" id = "no-money-button">
+            <button class="p-2 px-3 text-orange-dark font-bold bg-orange-light rounded cursor-pointer mt-3 mb-2">
+                OK
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="expired-modal"
+    class="w-full fixed flex justify-center z-10 min-h-screen items-center bg-black bg-opacity-50 hidden">
+    <div class="bg-white rounded-lg">
+        <div class="flex justify-between px-5 py-2 font-bold bg-green-medium text-brokenwhite p-7 rounded-t-lg">
+            <h1>Maaf, donasi ini sudah tutup</h1>
+        </div>
+
+        <div class="flex gap-5 justify-center items-center" id = "expired-button">
             <button class="p-2 px-3 text-orange-dark font-bold bg-orange-light rounded cursor-pointer mt-3 mb-2">
                 OK
             </button>

@@ -5,6 +5,7 @@ from django.http import HttpResponse, JsonResponse
 from django.core import serializers
 from donation_app.forms import DonationForm
 from django.contrib.auth.decorators import login_required
+import datetime
 
 # Create your views here.
 @login_required(login_url="/auth/login/")
@@ -44,3 +45,7 @@ def check_user(request):
             return JsonResponse({"pengguna": True})
             
     return JsonResponse({"pengguna": False})
+
+def get_current_date(request):
+
+    return JsonResponse({"current_date": datetime.date.today()})

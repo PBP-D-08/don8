@@ -18,8 +18,7 @@ class DonationForm(forms.ModelForm):
         donation = Donation.objects.get(id=donation_id)
         amount_of_donation = self.cleaned_data.get("amount_of_donation")
 
-        # if user.balance - amount_of_donation >= 0:
-        if True:
+        if user.balance - amount_of_donation >= 0:
 
             donation.money_accumulated = donation.money_accumulated + amount_of_donation
             user.balance = user.balance - amount_of_donation
@@ -33,7 +32,7 @@ class DonationForm(forms.ModelForm):
             )
 
             donation.save()
-            # user.save()
+            user.save()
 
             data = {"message": "Success", "money_accumulated": donation.money_accumulated, "money_needed": donation.money_needed}
 
