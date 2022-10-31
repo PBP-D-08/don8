@@ -10,13 +10,13 @@ from django.core.serializers.json import DjangoJSONEncoder
 import json
 
 # Create your views here.
-@login_required(login_url="/auth/login/")
 def show_donation_page(request, id):
     context = {"form": DonationForm()}
     return render(request, "donation_page.html", context)
 
 
 # fungsi buat update wallet user dan cek apakah mencukupi atau tidak
+@login_required(login_url="/auth/login/")
 def make_donation(request, id):
     form = DonationForm(request.POST or None)
     if request.POST and form.is_valid():
