@@ -57,7 +57,7 @@
         <ul class="py-1" aria-labelledby="user-menu-button">
           <li>
             <a
-              href="/profile/{{ request.user.username }}"
+              href="/profile/user/{{ request.user.username }}/"
               class="block py-2 px-4 text-sm text-green-dark hover:bg-green-light/25"
               >Profil</a
             >
@@ -74,7 +74,7 @@
           {% if user.is_authenticated and user.role == 1 and not user.is_superuser %}
           <li>
             <a
-              href="#"
+              href="{% url 'profile/user:show_donated' request.user.username %}"
               class="block py-2 px-4 text-sm text-green-dark hover:bg-green-light/25"
               >Donations History</a
             >
@@ -139,7 +139,7 @@
         </li>
         <li>
           <a
-            href="{% url 'supportmsg:show_support' %}"
+            href=""
             class="block py-2 pr-4 pl-3 text-green-dark rounded hover:bg-green-light/25 md:hover:bg-transparent md:hover:text-green-medium md:p-0 hover:scale-110 transition-all"
             >Messages</a
           >
