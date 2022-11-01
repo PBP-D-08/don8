@@ -1,0 +1,111 @@
+{% extends 'base.html' %} {% load static %} {% block meta %}
+<title>Don8</title>
+{% endblock meta %} {% block content %}
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,  shrink-to-fit=no" />
+</head>
+<div class="bg-brokenwhite min-h-screen">
+    <div class="flex flex-col justify-center py-20 my-auto items-center">
+        <h1 class="pt-10 font-bold text-green-dark text-[50px] md:text-[50px]">Leaderboard</h1>
+        <p>Leaderboard berdasarkan donasi dengan akumulasi terbesar</p>
+    </div>
+
+<!-- Start table -->
+<div class="overflow-x-auto relative m-10">
+    <table class="bg-orange-light w-full text-sm text-left text-green-dark">
+        <thead class="text-xs uppercase">
+            <tr>
+                <th scope="col" class="py-3 px-6">
+                    Rank
+                </th>
+                <th scope="col" class="py-3 px-6">
+                    Donation name
+                </th>
+                <th scope="col" class="py-3 px-6">
+                    Money Accumulated
+                </th>
+            </tr>
+        </thead>
+        <tbody id="table-content">
+            <!-- <tr class="bg-white text-orange-dark border-b dark:bg-gray-800 dark:border-gray-700">
+                <th scope="row" class="py-4 px-6 font-medium whitespace-nowrap dark:text-white">
+                    rank"
+                </th>
+                <td class="py-4 px-6">
+                    name
+                </td>
+                <td class="py-4 px-6">
+                    donation
+                </td>
+            </tr>
+            <tr class="m-20 bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    Microsoft Surface Pro
+                </th>
+                <td class="py-4 px-6">
+                    White
+                </td>
+                <td class="py-4 px-6">
+                    Laptop PC
+                </td>
+            </tr>
+            <tr class="bg-white dark:bg-gray-800">
+                <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    Magic Mouse 2
+                </th>
+                <td class="py-4 px-6">
+                    Black
+                </td>
+                <td class="py-4 px-6">
+                    Accessories
+                </td>
+            </tr> -->
+        </tbody>
+    </table>
+</div>
+<!-- End table -->
+</div>
+
+<script>
+    function show_table() {
+      let table = "";
+      $.ajax({
+          url: "{% url 'leaderboard:show_json_sorted' %}",
+          type: "GET",
+          dataType: "json",
+          success: function(data){
+              if(data == 0) {
+                  $('#table-content').html("")
+              }
+              else {
+                  let rank = 0; 
+                  for (i of data){
+                    rank += 1
+                      table += `
+                      <tr class="bg-white text-orange-dark border-b">
+                <th scope="row" class="py-4 px-6 font-medium whitespace-nowrap">
+                    ${rank}
+                </th>
+                <td class="py-4 px-6">
+                    ${i.fields.title}
+                </td>
+                <td class="py-4 px-6">
+                    ${i.fields.money_accumulated}
+                </td>
+            </tr>`;
+                      $('#table-content').html(table)
+                  }
+              }
+          },
+          error: function(data) {
+              console.log('Error')
+          }
+      })
+  }
+
+  $(document).ready(function () {
+      show_table();
+  })
+  </script>
+  
+{% endblock content %}
