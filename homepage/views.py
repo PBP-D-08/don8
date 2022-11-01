@@ -1,9 +1,8 @@
 from datetime import datetime
-from urllib import response
-from django.http import HttpResponse, JsonResponse
-from django.core import serializers
+from django.http import JsonResponse
 from django.shortcuts import render
 from homepage.models import Donation
+from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
@@ -11,17 +10,11 @@ def index(request):
     return render(request, "index.html")
 
 
-def show_json(request):
-    donations = Donation.objects.all()
-    return HttpResponse(
-        serializers.serialize("json", donations), content_type="application/json"
-    )
-
-
+@login_required(login_url="/auth/login/")
 def add_ajax_donation(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         title = request.POST.get("title")
-        print(title)
+        print("tile: ", title)
         description = request.POST.get("description")
         date_expired = request.POST.get("date_expired")
         image_url = request.POST.get("image_url")
@@ -35,7 +28,23 @@ def add_ajax_donation(request):
             date_created=date_created,
             date_expired=date_expired,
             image_url=image_url,
-            money_needed=money_needed
+            money_needed=money_needed,
         )
         d.save()
-    return JsonResponse({"instance": "success"}, status=200)
+        return JsonResponse(
+            {
+                "pk": d.pk,
+                "fields": {
+                    "title": d.title,
+                    "description": d.description,
+                    "date_expired": d.date_expired,
+                    "image_url": d.image_url,
+                    "date_created": d.date_created,
+                    "money_needed": d.money_needed,
+                    "money_accumulated": d.money_accumulated,
+                    "is_saved": False,
+                    "curr_role": request.user.role,
+                },
+            },
+            status=200,
+        )

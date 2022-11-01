@@ -1,0 +1,189 @@
+{% extends 'base.html' %} {% load static %} {% block meta %}
+<title>Don8</title>
+{% endblock meta %} {% block content %}
+<div class="bg-brokenwhite min-h-screen">
+    <div class="max-w-[80%] mx-auto min-h-screen py-28 text-center" id="messages">
+        <h1 class="text-green-dark text-[50px] font-bold mb-5 text-center">
+            All Support
+        </h1>
+        <button id="create_post"
+            class="text-brokenwhite bg-green-medium py-2 px-3 mb-5 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50">
+            Give Support
+        </button>
+        <div class="pt-6 flex flex-wrap items-center justify-center gap-10" id="message-cards">
+            <!-- start card -->
+            <!-- end card -->
+        </div>
+    </div>
+
+
+
+
+    <!-- Start modal -->
+    <!-- Main modal -->
+    <div id="defaultModal"
+        class="w-full fixed flex justify-center z-10 min-h-screen items-center bg-green-dark bg-opacity-50 hidden inset-0 h-modal md:h-full">
+        <div class="">
+            <!-- Modal content -->
+            <form method="POST" id="post-form">
+                {% csrf_token %}
+                <div class="relative bg-brokenwhite rounded-lg shadow">
+                    <!-- Modal header -->
+                    <div class="flex justify-between items-start p-4 rounded-t border-b">
+                        <h3 class="text-xl font-semibold text-gray-900">
+                            Create Post
+                        </h3>
+                        <button type="button"
+                            class="classtutup text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
+                            >
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="sr-only">Close modal</span>
+                        </button>
+                    </div>
+                    <!-- Modal body -->
+
+                    <div class="p-6 ">
+                        <!-- input -->
+                        <h5 class="text-green-dark font-bold text-left">Donation Name</h5>
+                        <div class="md:flex md:items-center mb-6">
+                            {{form.donation_name}}
+                            <!-- <select name="donation-name" id="id_donation-name" required
+                            class="col-span-2 form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none">
+                            {% for name in donations %}
+                            <option value={{name.title}}>{{name.title}}</option>
+                            {% endfor %} -->
+                        </div>
+                        <h5 class="text-green-dark font-bold text-left">Message</h5>
+                        <div class="md:flex md:items-center mb-6">
+                            {{form.message}}
+                            <!-- <textarea
+                                class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-brokenwhite focus:border-green-medium"
+                                id="id_message" name="message"></textarea> -->
+                        </div>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="flex items-center justify-center p-6 space-x-2 rounded-b border-t border-gray-200">
+                        <div class="text-brokenwhite bg-green-medium py-2 px-3 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50">
+                            <button id="btnSubmit" type="submit">
+                                Create
+                            </button>
+                        </div>
+                        <div class=" text-white bg-orange-medium transition-all rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:scale-110 focus:z-10">
+                            <button type="button"
+                                class="classtutup">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+    <!-- end modal -->
+</div>
+<script>
+    const openModal = e => {
+        $("#defaultModal").removeClass("hidden");
+    };
+
+    const closeModal = e => {
+        $("#defaultModal").addClass("hidden");
+    };
+
+    $("#create_post").click(openModal);
+    $(".classtutup").click(closeModal);
+
+    function getPost() {
+        const card = data => `
+        <div
+                class="p-6 max-w-sm min-w-[20%] rounded-lg shadow-lg hover:shadow-xl hover:shadow-green-light bg-green-medium py-4 px-3 hover:scale-105 transition-all">
+                <div class="flex items-center pb-2">
+                    <div class="flex items-start justify-between w-full">
+                        <div class="pl-2 w-full">
+                            <p class="focus:outline-none text-xl font-bold leading-5 text-brokenwhite">${data.fields.author_name}</p>
+                            <p class="focus:outline-none text-sm leading-normal text-brokenwhite">${data.fields.donation_name}</p>
+                        </div>
+    
+                    </div>
+                </div>
+                <div class="px-2">
+                    <p class="focus:outline-none text-md leading-5 text-brokenwhite overflow-y-auto h-24">${data.fields.message}</p>
+                    <p class="focus:outline-none text-xs leading-normal pb-2 text-brokenwhite font-mono">${data.fields.date_created}</p>
+                    <div class="flex items-start justify-between w-full">
+ 
+                        <button
+                            class="text-orange-dark font-bold bg-orange-light py-2 px-3 rounded hover:scale-105 hover:shadow-md transition-all hover:shadow-brokenwhite/50"
+                            id="post-${data.pk}" onclick="likePost(${data.pk})">
+                            Like This Post
+                        </button>
+
+                        <p class="text-orange-light py-2 pl-2 text-xl">${data.fields.likes.length} ❤</p>
+                    </div>
+                </div>
+            </div>`;
+
+        const render = data => {
+            const cards = data.map(card).join("");
+            $("#message-cards").html(cards);
+        };
+
+        $.ajax({
+            type: "GET",
+            url: "json/",
+            success: data => {
+                render(data);
+                // console.log(data)
+            },
+            error: err => {
+                console.log(err);
+            },
+        });
+
+    }
+    function addPost(e) {
+        e.preventDefault()
+        $.ajax({
+            type: 'POST',
+            url: 'add-message/',
+            data: $("#post-form").serialize(),
+
+            success: () => {
+                getPost()
+                $("#defaultModal").addClass("hidden")
+            },
+            dataType: 'json',
+            error: function (xhr, resp, text) {
+                console.log("xhr", xhr)
+                console.log("resp", resp)
+                console.log("text", text)
+            }
+
+        });
+    }
+
+    function likePost(id) {
+        $.ajax({
+            type: "POST",
+            url: 'like-post/',
+            data: { 'post_id': id, 'csrfmiddlewaretoken': '{{ csrf_token }}' },
+            dataType: "json",
+            success: () => {
+                getPost()
+            },
+
+        });
+    }
+
+    $(document).ready(() => {
+        getPost()
+        $("#btnSubmit").click(addPost)
+    });
+</script>
+{% endblock content %}

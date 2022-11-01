@@ -19,7 +19,9 @@ Tautan aplikasi Heroku: https://don8-proyek-ts.herokuapp.com/
 
 2. **Detail kegiatan penggalangan dana**
    
-   Dari jenis donasi yang dipilih di halaman utama, pengguna akan diarahkan ke halaman detail donasi. Halaman ini menampilkan nama perusahaan yang membuka donasi, deskripsi atau tujuan penggunaan dana, waktu batas pengumpulan dana, dan goal total donasi.
+   Dari jenis donasi yang dipilih di halaman utama, pengguna akan diarahkan ke halaman detail donasi. Halaman ini menampilkan nama organisasi yang membuka donasi, deskripsi atau tujuan penggunaan dana, judul donasi, waktu batas pengumpulan dana, jumlah dana yang telah dikumpulkan, dan jumlah dana yang ingin dikumpulkan.
+   
+3. **Halaman submit donasi**  Halaman ini menampilkan nama perusahaan yang membuka donasi, deskripsi atau tujuan penggunaan dana, waktu batas pengumpulan dana, dan goal total donasi.
 
 3. **Halaman submit donasi** 
 

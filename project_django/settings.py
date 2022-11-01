@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "homepage",
     "authentication",
+    "saved",
+    "supportmsg",
+    'donation_app',
     "leaderboard"
 ]
 

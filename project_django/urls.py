@@ -20,6 +20,9 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("homepage.urls")),
     path("auth/", include("authentication.urls")),
+    path("saved/", include("saved.urls")),
+    path("message/", include("supportmsg.urls")),
+    path("donation/", include("donation_app.urls")),
     path("leaderboard/", include("leaderboard.urls")),
 ]
 
