@@ -21,7 +21,7 @@
 
     <!-- Start modal -->
     <!-- Main modal -->
-    <div id="defaultModal" tabindex="-1"
+    <div id="defaultModal"
         class="w-full fixed flex justify-center z-10 min-h-screen items-center bg-green-dark bg-opacity-50 hidden inset-0 h-modal md:h-full">
         <div class="">
             <!-- Modal content -->
@@ -35,7 +35,7 @@
                         </h3>
                         <button type="button"
                             class="classtutup text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
-                            data-modal-toggle="defaultModal">
+                            >
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd"
@@ -57,7 +57,6 @@
                             {% for name in donations %}
                             <option value={{name.title}}>{{name.title}}</option>
                             {% endfor %} -->
-                            </select>
                         </div>
                         <h5 class="text-green-dark font-bold text-left">Message</h5>
                         <div class="md:flex md:items-center mb-6">
@@ -70,14 +69,17 @@
 
                     <!-- Modal footer -->
                     <div class="flex items-center justify-center p-6 space-x-2 rounded-b border-t border-gray-200">
-                        <button id="btnSubmit" data-modal-toggle="defaultModal" type="submit"
-                            class="text-brokenwhite bg-green-medium py-2 px-3 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50">
-                            Create
-                        </button>
-                        <button data-modal-toggle="defaultModal" type="button"
-                            class="classtutup text-white bg-orange-medium transition-all rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:scale-110 focus:z-10">
-                            Cancel
-                        </button>
+                        <div class="text-brokenwhite bg-green-medium py-2 px-3 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50">
+                            <button id="btnSubmit" type="submit">
+                                Create
+                            </button>
+                        </div>
+                        <div class=" text-white bg-orange-medium transition-all rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:scale-110 focus:z-10">
+                            <button type="button"
+                                class="classtutup">
+                                Cancel
+                            </button>
+                        </div>
                     </div>
                 </div>
             </form>
