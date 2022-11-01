@@ -77,7 +77,6 @@
         };
 
         const render_organization = data => {
-            console.log(data["donation"])
             data["link"] = "{% url 'profile/org:organizations_profile' 0 %}".replace("0", data["donation"].fields.user.toString())
             $("#organization-profile").html(template3(data));
         };
@@ -105,7 +104,6 @@
                             url: `/donation/get-last-donation/${id}/`,
                             type: "GET",
                             success: last_donation => {
-                                console.log(last_donation)
 
                                 if (last_donation["time"] == "-") {
                                     render_last_donation(last_donation["time"]);
