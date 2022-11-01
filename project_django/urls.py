@@ -23,7 +23,8 @@ urlpatterns = [
     path("profile/org/", include("organizations_profile.urls")),
     path("saved/", include("saved.urls")),
     path("message/", include("supportmsg.urls")),
-    path('donation/', include('donation_app.urls'))
+    path("donation/", include("donation_app.urls")),
+    path("leaderboard/", include("leaderboard.urls")),
 ]
 
 # TODO: Implement Routings Here

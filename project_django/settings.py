@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "organizations_profile",
     "supportmsg",
     'donation_app',
+    "leaderboard"
 ]
 
 AUTH_USER_MODEL = "authentication.User"
