@@ -1,8 +1,8 @@
 {% extends 'base.html' %} {% block content %}
 
 <script>
-  $(document).ready(() => {
-    const template = data => `
+    $(document).ready(() => {
+        const template = data => `
             
             <div
             class=" rounded-2xl bg-cover bg-center w-full h-[200px] md:h-[300px]"
@@ -11,30 +11,28 @@
             ">
             </div>
             <div class="flex flex-col gap-4">
-                <p class="font-bold text-orange-light text-2xl md:text-3xl mt-6 text-center">${
-                  data.fields.title
-                }</p>
+                <p class="font-bold text-orange-light text-2xl md:text-3xl mt-6 text-center">${data.fields.title
+            }</p>
                 <p class="font-bold flex flex-col items-center mb-1">
                     <span>
                         <span class="text-orange-light text-xl">Rp</span>
-                        <span id="money_accumulated" class="text-xl">${data.fields.money_accumulated
-                          .toLocaleString("en-US")
-                          .replaceAll(",", ".")}</span>
+                        <span id="money-accumulated" class="text-xl">${data.fields.money_accumulated
+                .toLocaleString("en-US")
+                .replaceAll(",", ".")}</span>
                         <span class="text-orange-light font-normal text-lg"> / </span>
                         <span class="text-xl">${data.fields.money_needed
-                          .toLocaleString("en-US")
-                          .replaceAll(",", ".")}</span>
+                .toLocaleString("en-US")
+                .replaceAll(",", ".")}</span>
                         <span class="text-orange-light font-normal text-lg">terkumpul</span>
                     </span>
                 </p>
             </div>
             <div class="h-3 bg-brokenwhite rounded-full mt-2">
-                <div id = "progress_bar" class="h-3 bg-orange-medium rounded-full w-[${
-                  data.fields.money_accumulated / data.fields.money_needed > 1
-                    ? 100
-                    : (100 * data.fields.money_accumulated) /
-                      data.fields.money_needed
-                }%]">
+                <div id = "progress_bar" class="h-3 bg-orange-medium rounded-full w-[${data.fields.money_accumulated / data.fields.money_needed > 1
+                ? 100
+                : (100 * data.fields.money_accumulated) /
+                data.fields.money_needed
+            }%]">
                 </div>
             </div>
             <div class="mt-3 flex flex-col items-center">
@@ -53,332 +51,327 @@
             </div>
         `;
 
-    const template2 = data => `
+        const template2 = data => `
             <p class="font-bold text-orange-light text-2xl md:text-3xl">Deskripsi</p>
             <p class="text-lg mt-5">${data.fields.description}</p>
         `;
 
-    const template3 = data => `
+        const template3 = data => `
             <div class="flex flex-row items-center" style="justify-content:space-between">
-                    
-                <p class="font-bold text-orange-light text-2xl">${data.fields.username}</p>
+                <p class="font-bold text-orange-light text-xl md:text-2xl">${data[0].fields.username}</p>
                 <button class="text-orange-dark font-bold bg-orange-light py-2 px-3 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50">
-                    Kunjungi Profil
+                    <a href=${data["link"]}>Kunjungi Profil</a>
                 </button>
             </div>
         `;
+        const template4 = data => `
+            <div class="col-2 flex flex-row items-center">
+                <div class="text-orange-light text-lg w-[100%] flex flex-col items-start">Terakhir melakukan donasi:</div>
+                <div class="font-bold w-[100%] flex flex-col items-center" id="last-donation-time">${data}</div>
+            </div>
+        `;
 
-    const render_donation = data => {
-      $("#donation-main").html(template(data));
-      $("#donation-description").html(template2(data));
-    };
+        const render_donation = data => {
+            $("#donation-main").html(template(data));
+            $("#donation-description").html(template2(data));
+        };
 
-    const render_organization = data => {
-      $("#organization-profile").html(template3(data));
-    };
+        const render_organization = data => {
+            console.log(data["donation"])
+            data["link"] = "{% url 'profile/org:organizations_profile' 0 %}".replace("0", data["donation"].fields.user.toString())
+            $("#organization-profile").html(template3(data));
+        };
 
-    const id = $(location).attr("pathname").split("/")[2];
+        const render_last_donation = data => {
+            $("#last-donation").html(template4(data));
+        }
 
-    $.ajax({
-      url: `/donation/json-donation/${id}/`,
-      type: "GET",
-      success: data => {
-        render_donation(data[0]);
+        const id = $(location).attr("pathname").split("/")[2];
 
         $.ajax({
-          url: `/donation/json-organization/${data[0].fields.user}/`,
-          type: "GET",
-          success: data => {
-            render_organization(data[0]);
-          },
-          error: err => {
-            console.log(err);
-          },
-        });
-      },
-      error: err => {
-        console.log(err);
-      },
-    });
+            url: `/donation/json-donation/${id}/`,
+            type: "GET",
+            success: donation => {
+                render_donation(donation[0]);
 
-    const openDonationModal = e => {
-      $("#make-donation-modal").removeClass("hidden");
-    };
-
-    const closeDonationModal = e => {
-      $("#make-donation-modal").addClass("hidden");
-    };
-
-    const openUnauthorizedModal = e => {
-      $("#unauthorized-modal").removeClass("hidden");
-    };
-
-    const closeUnauthorizedModal = e => {
-      $("#unauthorized-modal").addClass("hidden");
-    };
-
-    const openNoMoneyModal = e => {
-      $("#no-money-modal").removeClass("hidden");
-    };
-
-    const closeNoMoneyModal = e => {
-      $("#no-money-modal").addClass("hidden");
-    };
-
-    const openExpiredModal = e => {
-      $("#expired-modal").removeClass("hidden");
-    };
-
-    const closeExpiredModal = e => {
-      $("#expired-modal").addClass("hidden");
-    };
-
-    $("body").on("click", "#unauthorized-button", function () {
-      closeUnauthorizedModal();
-    });
-
-    $("body").on("click", "#no-money-button", function () {
-      closeNoMoneyModal();
-    });
-
-    $("body").on("click", "#expired-button", function () {
-      closeExpiredModal();
-    });
-
-    $("body").on("click", "#make-donation-button", function () {
-      $.ajax({
-        url: `/donation/check-user/`,
-        type: "GET",
-        success: user => {
-          if (user["pengguna"]) {
-            $.ajax({
-              url: `/donation/json-donation/${id}/`,
-              type: "GET",
-              success: donation => {
                 $.ajax({
-                  url: `/donation/get-current-date/`,
-                  type: "GET",
-                  success: date => {
-                    const date_expired =
-                      donation[0].fields.date_expired.split("-");
-                    const current_date = date["current_date"].split("-");
+                    url: `/donation/json-organization/${donation[0].fields.user}/`,
+                    type: "GET",
+                    success: organization => {
+                        organization["donation"] = donation[0]
+                        render_organization(organization);
 
-                    if (
-                      date_expired[0] < current_date[0] ||
-                      (date_expired[0] == current_date[0] &&
-                        date_expired[1] < current_date[1]) ||
-                      (date_expired[0] == current_date[0] &&
-                        date_expired[1] == current_date[1] &&
-                        date_expired[2] <= current_date[2])
-                    ) {
-                      openExpiredModal();
-                    } else {
-                      openDonationModal();
-                    }
-                  },
-                  error: err => {
-                    console.log(err);
-                  },
+                        $.ajax({
+                            url: `/donation/get-last-donation/${id}/`,
+                            type: "GET",
+                            success: last_donation => {
+                                console.log(last_donation)
+
+                                if (last_donation["time"] == "-") {
+                                    render_last_donation(last_donation["time"]);
+
+                                } else {
+                                    render_last_donation(last_donation["time"]);
+                                }
+
+                            },
+                            error: err => {
+                                console.log(err);
+                            },
+                        });
+
+                    },
+                    error: err => {
+                        console.log(err);
+                    },
                 });
-              },
-              error: err => {
+            },
+            error: err => {
                 console.log(err);
-              },
+            },
+        });
+
+        const openDonationModal = e => {
+            $("#make-donation-modal").removeClass("hidden");
+        };
+
+        const closeDonationModal = e => {
+            $("#make-donation-modal").addClass("hidden");
+        };
+
+        const openUnauthorizedModal = e => {
+            $("#unauthorized-modal").removeClass("hidden");
+        };
+
+        const closeUnauthorizedModal = e => {
+            $("#unauthorized-modal").addClass("hidden");
+        };
+
+        const openNoMoneyModal = e => {
+            $("#no-money-modal").removeClass("hidden");
+        };
+
+        const closeNoMoneyModal = e => {
+            $("#no-money-modal").addClass("hidden");
+        };
+
+        const openExpiredModal = e => {
+            $("#expired-modal").removeClass("hidden");
+        };
+
+        const closeExpiredModal = e => {
+            $("#expired-modal").addClass("hidden");
+        };
+
+        $("body").on("click", "#unauthorized-button", function () {
+            closeUnauthorizedModal();
+        });
+
+        $("body").on("click", "#no-money-button", function () {
+            closeNoMoneyModal();
+        });
+
+        $("body").on("click", "#expired-button", function () {
+            closeExpiredModal();
+        });
+
+        $("body").on("click", "#make-donation-button", function () {
+            $.ajax({
+                url: `/donation/check-user/`,
+                type: "GET",
+                success: user => {
+                    if (user["pengguna"]) {
+                        $.ajax({
+                            url: `/donation/json-donation/${id}/`,
+                            type: "GET",
+                            success: donation => {
+                                $.ajax({
+                                    url: `/donation/get-current-date/`,
+                                    type: "GET",
+                                    success: date => {
+                                        const date_expired =
+                                            donation[0].fields.date_expired.split("-");
+                                        const current_date = date["current_date"].split("-");
+
+                                        if (
+                                            date_expired[0] < current_date[0] ||
+                                            (date_expired[0] == current_date[0] &&
+                                                date_expired[1] < current_date[1]) ||
+                                            (date_expired[0] == current_date[0] &&
+                                                date_expired[1] == current_date[1] &&
+                                                date_expired[2] <= current_date[2])
+                                        ) {
+                                            openExpiredModal();
+                                        } else {
+                                            openDonationModal();
+                                        }
+                                    },
+                                    error: err => {
+                                        console.log(err);
+                                    },
+                                });
+                            },
+                            error: err => {
+                                console.log(err);
+                            },
+                        });
+                    } else {
+                        openUnauthorizedModal();
+                    }
+                },
+                error: err => {
+                    console.log(err);
+                },
             });
-          } else {
-            openUnauthorizedModal();
-          }
-        },
-        error: err => {
-          console.log(err);
-        },
-      });
+        });
+
+        $("#close-icon").click(closeDonationModal);
+        $("body").on("submit", "#make-donation-form", function (e) {
+            e.preventDefault();
+
+            $.ajaxSetup({
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader(
+                        "X-CSRFToken",
+                        jQuery("[name=csrfmiddlewaretoken]").val()
+                    );
+                },
+            });
+
+            $.ajax({
+                type: "POST",
+                url: "{% url 'donation_app:make_donation' 0 %}".replace("0", id),
+                data: {
+                    amount_of_donation: $("#id_amount_of_donation").val(),
+                },
+                success: function (response) {
+                    $("#make-donation-form").trigger("reset");
+                    closeDonationModal();
+
+                    document.getElementById("money-accumulated").innerHTML =
+                        response["data"].money_accumulated
+                            .toLocaleString("en-US")
+                            .replaceAll(",", ".");
+
+                    var progress =
+                        response["data"].money_accumulated / response["data"].money_needed > 1
+                            ? 100
+                            : (100 * response["data"].money_accumulated) / response["data"].money_needed;
+                    $("#progress_bar").attr(
+                        "class",
+                        `h-3 bg-orange-medium rounded-full w-[${progress}%]`
+                    );
+
+                    document.getElementById("last-donation-time").innerHTML =
+                        response["time"];
+
+                    if (response.message == "Not enough money") {
+                        openNoMoneyModal();
+                    }
+                },
+                error: err => {
+                    console.log(err);
+                },
+            });
+        });
     });
-
-    $("#close-icon").click(closeDonationModal);
-    $("body").on("submit", "#make-donation-form", function (e) {
-      e.preventDefault();
-
-      $.ajaxSetup({
-        beforeSend: function (xhr, settings) {
-          xhr.setRequestHeader(
-            "X-CSRFToken",
-            jQuery("[name=csrfmiddlewaretoken]").val()
-          );
-        },
-      });
-
-      $.ajax({
-        type: "POST",
-        url: "{% url 'donation_app:make_donation' 0 %}".replace("0", id),
-        data: {
-          amount_of_donation: $("#id_amount_of_donation").val(),
-        },
-        success: function (response) {
-          $("#make-donation-form").trigger("reset");
-          closeDonationModal();
-          document.getElementById("money_accumulated").innerHTML =
-            response.money_accumulated
-              .toLocaleString("en-US")
-              .replaceAll(",", ".");
-          var progress =
-            response.money_accumulated / response.money_needed > 1
-              ? 100
-              : (100 * response.money_accumulated) / response.money_needed;
-          $("#progress_bar").attr(
-            "class",
-            `h-3 bg-orange-medium rounded-full w-[${progress}%]`
-          );
-
-          if (response.message == "Not enough money") {
-            openNoMoneyModal();
-          }
-        },
-      });
-    });
-  });
 </script>
 
-<div
-  id="make-donation-modal"
-  class="w-full fixed flex justify-center z-10 min-h-screen items-center bg-black bg-opacity-50 hidden"
->
-  <div class="bg-white rounded-lg">
-    <div
-      class="flex justify-between px-5 py-2 bg-green-medium text-brokenwhite p-7 rounded-t-lg"
-    >
-      <h1 class="font-bold">Make a donation</h1>
-      <div class="cursor-pointer" id="close-icon">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="1.5"
-          stroke="currentColor"
-          class="w-6 h-6"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M6 18L18 6M6 6l12 12"
-          />
-        </svg>
-      </div>
-    </div>
-
-    <div class="m-5">
-      <form method="POST" id="make-donation-form">
-        {% csrf_token %}
-        <div class="flex flex-col gap-5">
-          {{form.as_div}}
-          <div class="flex gap-5 mx-auto">
-            <input
-              class="p-2 text-orange-dark font-bold bg-orange-light rounded cursor-pointer"
-              type="submit"
-              value="Submit"
-            />
-          </div>
+<div id="make-donation-modal"
+    class="w-full fixed flex justify-center z-10 min-h-screen items-center bg-black bg-opacity-50 hidden">
+    <div class="bg-white rounded-lg">
+        <div class="flex justify-between px-5 py-2 bg-green-medium text-brokenwhite p-7 rounded-t-lg">
+            <h1 class="font-bold">Make a donation</h1>
+            <div class="cursor-pointer" id="close-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </div>
         </div>
-      </form>
+
+        <div class="m-5">
+            <form method="POST" id="make-donation-form">
+                {% csrf_token %}
+                <div class="flex flex-col gap-5">
+                    {{form.as_div}}
+                    <div class="flex gap-5 mx-auto">
+                        <input class="p-2 text-orange-dark font-bold bg-orange-light rounded cursor-pointer"
+                            type="submit" value="Submit" />
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
-  </div>
 </div>
 
-<div
-  id="unauthorized-modal"
-  class="w-full fixed flex justify-center z-10 min-h-screen items-center bg-black bg-opacity-50 hidden"
->
-  <div class="bg-white rounded-lg">
-    <div
-      class="flex justify-between px-5 py-2 font-bold bg-green-medium text-brokenwhite p-7 rounded-t-lg"
-    >
-      <h1>Anda harus login sebagai pengguna</h1>
-    </div>
+<div id="unauthorized-modal"
+    class="w-full fixed flex justify-center z-10 min-h-screen items-center bg-black bg-opacity-50 hidden">
+    <div class="bg-white rounded-lg">
+        <div class="flex justify-between px-5 py-2 font-bold bg-green-medium text-brokenwhite p-7 rounded-t-lg">
+            <h1>Anda harus login sebagai pengguna</h1>
+        </div>
 
-    <div
-      class="flex gap-5 justify-center items-center"
-      id="unauthorized-button"
-    >
-      <button
-        class="p-2 text-orange-dark font-bold bg-orange-light rounded cursor-pointer mt-3 mb-2"
-      >
-        <a href="{% url 'auth:login' %}">Login</a>
-      </button>
+        <div class="flex gap-5 justify-center items-center" id="unauthorized-button">
+            <button class="p-2 text-orange-dark font-bold bg-orange-light rounded cursor-pointer mt-3 mb-2">
+                <a href="{% url 'auth:login' %}">Login</a>
+            </button>
+        </div>
     </div>
-  </div>
 </div>
 
-<div
-  id="no-money-modal"
-  class="w-full fixed flex justify-center z-10 min-h-screen items-center bg-black bg-opacity-50 hidden"
->
-  <div class="bg-white rounded-lg">
-    <div
-      class="flex justify-between px-5 py-2 font-bold bg-green-medium text-brokenwhite p-7 rounded-t-lg"
-    >
-      <h1>Uang Anda tidak cukup</h1>
-    </div>
+<div id="no-money-modal"
+    class="w-full fixed flex justify-center z-10 min-h-screen items-center bg-black bg-opacity-50 hidden">
+    <div class="bg-white rounded-lg">
+        <div class="flex justify-between px-5 py-2 font-bold bg-green-medium text-brokenwhite p-7 rounded-t-lg">
+            <h1>Uang Anda tidak cukup</h1>
+        </div>
 
-    <div class="flex gap-5 justify-center items-center" id="no-money-button">
-      <button
-        class="p-2 px-3 text-orange-dark font-bold bg-orange-light rounded cursor-pointer mt-3 mb-2"
-      >
-        OK
-      </button>
+        <div class="flex gap-5 justify-center items-center" id="no-money-button">
+            <button class="p-2 px-3 text-orange-dark font-bold bg-orange-light rounded cursor-pointer mt-3 mb-2">
+                OK
+            </button>
+        </div>
     </div>
-  </div>
 </div>
 
-<div
-  id="expired-modal"
-  class="w-full fixed flex justify-center z-10 min-h-screen items-center bg-black bg-opacity-50 hidden"
->
-  <div class="bg-white rounded-lg">
-    <div
-      class="flex justify-between px-5 py-2 font-bold bg-green-medium text-brokenwhite p-7 rounded-t-lg"
-    >
-      <h1>Maaf, donasi ini sudah tutup</h1>
-    </div>
+<div id="expired-modal"
+    class="w-full fixed flex justify-center z-10 min-h-screen items-center bg-black bg-opacity-50 hidden">
+    <div class="bg-white rounded-lg">
+        <div class="flex justify-between px-5 py-2 font-bold bg-green-medium text-brokenwhite p-7 rounded-t-lg">
+            <h1>Maaf, donasi ini sudah tutup</h1>
+        </div>
 
-    <div class="flex gap-5 justify-center items-center" id="expired-button">
-      <button
-        class="p-2 px-3 text-orange-dark font-bold bg-orange-light rounded cursor-pointer mt-3 mb-2"
-      >
-        OK
-      </button>
+        <div class="flex gap-5 justify-center items-center" id="expired-button">
+            <button class="p-2 px-3 text-orange-dark font-bold bg-orange-light rounded cursor-pointer mt-3 mb-2">
+                OK
+            </button>
+        </div>
     </div>
-  </div>
 </div>
 
 <div class="bg-brokenwhite min-h-screen py-10">
-  <div
-    class="max-w-[80%] mx-auto min-h-screen flex flex-col items-center justify-center"
-  >
-    <div
-      class="col-2 flex lg:flex-row gap-8 flex-col items-center lg:justify-center"
-      style="width: 100%"
-    >
-      <div
-        class="bg-green-medium p-5 rounded-3xl text-brokenwhite p-7"
-        style="width: min(100%, 600px)"
-        id="donation-main"
-      ></div>
+    <div class="max-w-[80%] mx-auto min-h-screen flex flex-col items-center justify-center">
+        <div class="row-2 flex gap-8 flex-col items-center lg:justify-center">
+            <div class="col-2 flex lg:flex-row gap-8 flex-col items-center lg:justify-center" style="width: 100%">
+                <div class="bg-green-medium p-5 rounded-3xl text-brokenwhite p-7" style="width: min(100%, 600px)"
+                    id="donation-main"></div>
 
-      <div
-        class="flex flex-col-reverse lg:flex-col gap-8 max-w-xl"
-        style="width: min(100%, 600px)"
-      >
-        <div
-          class="bg-green-medium p-5 rounded-3xl text-brokenwhite h-1/2 p-7 w-[100%]"
-          id="donation-description"
-        ></div>
-        <div
-          class="bg-green-medium p-5 rounded-3xl text-brokenwhite h-1/2 p-7 w-[100%]"
-          id="organization-profile"
-        ></div>
-      </div>
+                <div class="flex flex-col-reverse lg:flex-col gap-8 max-w-xl" style="width: min(100%, 600px)">
+                    <div class="bg-green-medium p-5 rounded-3xl text-brokenwhite h-1/2 p-7 w-[100%]"
+                        id="donation-description"></div>
+                    <div class="bg-green-medium p-5 rounded-3xl text-brokenwhite h-1/2 p-7 w-[100%]"
+                        id="organization-profile"></div>
+                </div>
+            </div>
+
+            {% if pengguna %}
+            <div class="bg-green-medium p-5 rounded-3xl text-brokenwhite h-1/2 p-7 w-[100%]"
+                style="width: min(100%, 600px)" id="last-donation">
+            </div>
+            {% endif %}
+        </div>
     </div>
-  </div>
 </div>
 
 {% endblock content %}
