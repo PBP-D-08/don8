@@ -24,6 +24,7 @@ class DonationForm(forms.ModelForm):
 
             donation.money_accumulated = donation.money_accumulated + amount_of_donation
             organization.total_campaign = organization.total_campaign + amount_of_donation
+            donation.user.balance = donation.user.balance + amount_of_donation
             user.balance = user.balance - amount_of_donation
 
             UserDonation.objects.create(
@@ -37,6 +38,7 @@ class DonationForm(forms.ModelForm):
             donation.save()
             organization.save()
             user.save()
+            donation.user.save()
 
             data = {"message": "Success", "money_accumulated": donation.money_accumulated, "money_needed": donation.money_needed}
 
