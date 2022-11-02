@@ -1,6 +1,5 @@
 from django.shortcuts import render
-from django.contrib import messages
-from django.http import HttpResponse,JsonResponse
+from django.http import HttpResponse
 from django.core import serializers
 from supportmsg.models import Post
 from homepage.models import Donation

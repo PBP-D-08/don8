@@ -1,5 +1,4 @@
 from django import forms
-from authentication.models import User
 from donation_app.models import UserDonation
 from homepage.models import Donation
 from organizations_profile.models import Profile

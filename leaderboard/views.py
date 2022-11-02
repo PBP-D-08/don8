@@ -1,10 +1,7 @@
-from datetime import datetime
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse
 from django.shortcuts import render
 from homepage.models import Donation
-from django.core.serializers.json import DjangoJSONEncoder
 from django.core import serializers
-import json
 
 # Create your views here.
 def show_leaderboard(request):
