@@ -2,7 +2,7 @@ from django import forms
 from authentication.models import User
 from donation_app.models import UserDonation
 from homepage.models import Donation
-from organizations_profile.models import Profile
+from organizations_profile.models import ProfileO
 import datetime
 
 class DonationForm(forms.ModelForm):
@@ -17,7 +17,7 @@ class DonationForm(forms.ModelForm):
 
         user = request.user # user dengan role pengguna
         donation = Donation.objects.get(id=donation_id)
-        organization = Profile.objects.get(organization=donation.user)
+        organization = ProfileO.objects.get(organization=donation.user)
         amount_of_donation = self.cleaned_data.get("amount_of_donation", -1)
 
         if user.balance - amount_of_donation >= 0:

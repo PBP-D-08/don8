@@ -4,7 +4,8 @@ from django.http import HttpResponse, JsonResponse
 from django.core import serializers
 from django.shortcuts import render
 from homepage.models import Donation
-from organizations_profile.models import Profile
+from organizations_profile.models import ProfileO
+from profile_pengguna.models import ProfileU
 from authentication.models import User
 from organizations_profile.forms import WithdrawForm
 
@@ -16,7 +17,7 @@ def organizations_profile(request, id):
 
     for i in profiles:
         profile = i
-    org_profile = Profile.objects.get(organization=profile)
+    org_profile = ProfileO.objects.get(organization=profile)
     donations = Donation.objects.filter(user=profile)
     for i in donations:
         i.org_name = profile.username
@@ -55,7 +56,7 @@ def show_json(request, id):
     profile = list(User.objects.filter(username=id))
     for i in profile:
         profile = i
-    org_profile = Profile.objects.get(organization=profile)
+    org_profile = ProfileO.objects.get(organization=profile)
     donations = Donation.objects.filter(user=profile)
 
     return HttpResponse(
