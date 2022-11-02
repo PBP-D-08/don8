@@ -37,7 +37,8 @@ Tautan aplikasi Heroku: https://don8-proyek-ts.herokuapp.com/
      - Menampilkan detail akun, rincian penerimaan donasi, total uang yang terkumpul 💵
      - Menampilkan form withdraw (jika sedang membuka profile milik sendiri)
 
-6. **Support message**
+6. **Support message** 💌
+
    Halaman support message berisikan pesan-pesan dukungan yang diberikan untuk donasi yang ada. Pesan-pesan yang telah disubmit juga dapat diberikan like.
 
 7. **Register dan Login untuk 2 jenis akun** 📝
@@ -45,11 +46,11 @@ Tautan aplikasi Heroku: https://don8-proyek-ts.herokuapp.com/
    Halaman register digunakan untuk menginput detail akun pengguna yang ingin mendaftarkan akunnya sebagai donatur ataupun organisasi. Halaman login.
 
    - **Role atau peran pengguna beserta deskripsinya (karena bisa saja lebih dari satu jenis pengguna yang mengakses aplikasi)**
-      - **Role pertama**: Donatur (memberikan donasi (punya saldo)) 👥
+      - **Role pertama**: Donatur 👥 (memberikan donasi (punya saldo)) 
         - Ketika donatur melakukan registrasi, donatur akan diminta untuk megisi username, password, dan memilih role "Pengguna".
         - Donatur dapat melakukan top up jika saldo yang dimilikinya sekarang tidak mencukupi untuk melakukan suatu donasi. Uang yang donatur gunakan untuk melakukan topup bersifat fiksi sehingga donatur memiliki uang yang tak hingga
         - Donatur dapat memilih penggalangan dana mana yang ingin diberikan donasi dan melakukan pembayaran untuk transaksi donasi
-      - **Role kedua**: Organisasi (menggalang donasi (punya saldo khusus setiap penggalangan dana, saldo total seluruh penggalangan dana)) 🏢
+      - **Role kedua**: Organisasi 🏢 (menggalang donasi (punya saldo khusus setiap penggalangan dana, saldo total seluruh penggalangan dana)) 
         - Organisasi dapat mendaftarkan kegiatan penggalangan dana pada website kami.
         - Uang yang donatur berikan kepada kegiatan tertentu akan terkumpul dan akan langsung diterima oleh organisasi tersebut untuk disalurkan kepada orang terkait. Jumlah uang yang terkumpul untuk masing-masing kegiatan akan ditampilkan juga, beserta target uang yang ingin dikumpulkan, pada halaman website kami.
         - Kegiatan penggalangan dana memiliki expired date yang ditentukan oleh organisasi yang membukanya di mana jika sudah terlewat maka tidak bisa melakukan donasi lagi pada kegiatan tersebut.
