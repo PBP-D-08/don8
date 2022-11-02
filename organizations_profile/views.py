@@ -67,7 +67,7 @@ def show_jsoncomp(request, id):
     profile = list(User.objects.filter(username=id))
     for i in profile:
         profile = i
-    org_profile = Profile.objects.get(organization=profile)
+    org_profile = ProfileO.objects.get(organization=profile)
     donation = Donation.objects.filter(user=profile)
     donations = []
     for i in donation:
@@ -83,7 +83,7 @@ def show_jsonexp(request, id):
     profile = list(User.objects.filter(username=id))
     for i in profile:
         profile = i
-    org_profile = Profile.objects.get(organization=profile)
+    org_profile = ProfileO.objects.get(organization=profile)
     donation = Donation.objects.filter(user=profile)
     donations =[]
     for i in donation:
@@ -98,7 +98,7 @@ def show_jsonpro(request, id):
     profile = list(User.objects.filter(username=id))
     for i in profile:
         profile = i
-    org_profile = Profile.objects.get(organization=profile)
+    org_profile = ProfileO.objects.get(organization=profile)
     donation = Donation.objects.filter(user=profile)
     donations = []
     for i in donation:
