@@ -90,4 +90,4 @@ def show_json_balance(request, username):
 
 @login_required(login_url="/auth/login/")
 def show_json_amount(request, username):
-    return HttpResponse(serializers.serialize("json", Profile.objects.filter(user__username=username)), content_type="application/json")
+    return HttpResponse(serializers.serialize("json", ProfileU.objects.filter(user__username=username)), content_type="application/json")
