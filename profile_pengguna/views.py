@@ -84,5 +84,10 @@ def show_json_history(request, username):
         content_type="application/json",
     )
 
+@login_required(login_url="/auth/login/")
 def show_json_balance(request, username):
     return HttpResponse(serializers.serialize("json", User.objects.filter(username=username)), content_type="application/json")
+
+@login_required(login_url="/auth/login/")
+def show_json_amount(request, username):
+    return HttpResponse(serializers.serialize("json", Profile.objects.filter(user__username=username)), content_type="application/json")
