@@ -97,23 +97,23 @@
 <div class="bg-brokenwhite min-h-screen ">
     <div class="bg-fixed bg-no-repeat bg-right-bottom" style="background-image: url(/static/organizations_profile/5299.png)">
         <div
-                class="max-w-[80%] mx-auto min-h-screen flex items-center justify-between gap-10"
+                class="max-w-[80%] mx-auto min-h-screen flex items-center md:justify-between gap-10 flex-col md:flex-row py-20 sm:py-0"
         >
-            <div>
-                <h1 class="font-bold text-green-dark text-[100px]">{{ profile.username }}</h1>
-                <div class="flex items-center">
-                    <h3 class="font-bold text-green-light text-[45px]">Telah berhasil &nbsp</h3>
-                    <h3 class="font-bold text-green-dark text-[50px]">mengumpulkan</h3>
+            <div class="">
+                <h1 class="font-bold text-green-dark text-[100px] ">{{ profile.username }}</h1>
+                <div class="">
+                    <h3 class="font-bold text-green-light text-[25px] sm:text-[45px]">Telah berhasil &nbsp</h3>
+                    <h3 class="font-bold text-green-dark text-[30px] sm:text-[50px]"> mengumpulkan</h3>
                 </div>
                 <div class="flex items-center">
-                    <p class="font-bold text-green-light text-[40px] text-justify">Rp &nbsp</p>
-                    <p class="text-green-dark font-bold text-[50px] text-justify">{{ profile.balance }}</p>
-                    <p class="font-bold text-green-light text-[40px] text-justify">.00</p>
+                    <p class="font-bold text-green-light text-[25px] sm:text-[40px] text-justify">Rp &nbsp</p>
+                    <p class="text-green-dark font-bold text-[30px] sm:text-[50px] text-justify">{{ profile.balance }}</p>
+                    <p class="font-bold text-green-light text-[25px] sm:text-[40px] text-justify">.00</p>
                 </div>
                 <div class="flex items-center">
-                    <p class="font-bold text-green-light mb-[30px] text-[45px] text-justify"> Dari &nbsp</p>
-                    <p class="font-bold text-green-dark mb-[30px] text-[50px] text-justify">{{ org_profile.total_campaign }}</p>
-                    <p class="font-bold text-green-light mb-[30px] text-[45px] text-justify"> &nbsp penggalangan dana</p>
+                    <p class="font-bold text-green-light mb-[30px] sm:text-[45px] text-[20px] text-justify"> Dari &nbsp</p>
+                    <p class="font-bold text-green-dark mb-[30px] sm:text-[50px] text-[30px] text-justify">{{ org_profile.total_campaign }}</p>
+                    <p class="font-bold text-green-light mb-[30px] sm:text-[45px] text-[20px] text-justify"> &nbsp penggalangan dana</p>
                 </div>
                 <button
                         class="text-brokenwhite bg-gradient-to-r from-green-dark to-green-medium py-4 px-5 rounded-lg hover:scale-110 hover:shadow-lg transition-all hover:shadow-gree-medium/70 text-[25px]"
@@ -139,9 +139,9 @@
                 </button>
             </div>
             <div
-                    class="rounded-lg shadow-lg bg-green-medium py-4 px-3 hover:scale-150 transition-all"
+                    class="rounded-lg shadow-lg bg-green-medium py-4 px-3 hover:scale-120 sm:hover:scale-150 transition-all"
             >
-                <div class="min-w-[250px] max-h-[150px] text-center text-brokenwhite">
+                <div class="min-w-[250px] min-h-[150px] text-center text-brokenwhite">
                     <p class="font-bold text-orange-light text-[35px] mt-4 mb-2">Catatan Keuangan</p>
                     <p class="font-bold text-[25px] mb-1">
                         <span class="text-orange-light font-normal">Rp</span>
@@ -159,11 +159,11 @@
         </div> <!-- organizations profile -->
 
         <div class="max-w-[80%] mx-auto min-h-screen py-20" id="donations">
-            <h1 class="text-green-dark text-[50px] font-bold mb-10 text-center">
+            <h1 class="text-green-dark sm:text-[50px] text-[40px] font-bold mb-10 text-center">
                 Our Campaigns
             </h1>
 
-            <div class="flex flex-wrap items-center justify-center mb-10"
+            <div class="flex flex-row items-center justify-center mb-10 scale-75 sm:scale-110"
                  role="group"
             >
                 <button type="button" id="all-button"
@@ -179,8 +179,9 @@
                     Expired
                 </button>
                 <button type="button" id="progress-button"
-                        class="py-4 px-6 text-sm font-medium text-brokenwhite bg-brokenwhite rounded-r-md border border-green-dark hover:bg-green-medium hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-brokenwhite dark:bg-green-medium dark:border-green-dark dark:text-brokenwhite dark:hover:text-brokenwhite dark:hover:bg-green-dark dark:focus:ring-green-dark dark:focus:text-brokenwhite">
-                    In Progress
+                        class="sm:py-[6px] px-6 py-[6px] text-sm font-medium text-brokenwhite bg-brokenwhite rounded-r-md border border-green-dark hover:bg-green-medium hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-brokenwhite dark:bg-green-medium dark:border-green-dark dark:text-brokenwhite dark:hover:text-brokenwhite dark:hover:bg-green-dark dark:focus:ring-green-dark dark:focus:text-brokenwhite">
+                    In<br>
+                    Progress
                 </button>
             </div>
 
