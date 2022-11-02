@@ -263,7 +263,7 @@
                     document.getElementById("last-donation-time").innerHTML =
                         response["time"];
 
-                    if (response.message == "Not enough money") {
+                    if (response["data"]["message"] == "Not enough money") {
                         openNoMoneyModal();
                     }
                 },
