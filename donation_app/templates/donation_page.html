@@ -77,7 +77,7 @@
         };
 
         const render_organization = data => {
-            data["link"] = "{% url 'profile/org:organizations_profile' 0 %}".replace("0", data["donation"].fields.user.toString())
+            data["link"] = "{% url 'profile/org:organizations_profile' 0 %}".replace("0", data[0].fields.username)
             $("#organization-profile").html(template3(data));
         };
 

@@ -4,7 +4,6 @@ from django.core import serializers
 from django.shortcuts import render
 from homepage.models import Donation
 from organizations_profile.models import ProfileO
-from profile_pengguna.models import ProfileU
 from authentication.models import User
 from organizations_profile.forms import WithdrawForm
 

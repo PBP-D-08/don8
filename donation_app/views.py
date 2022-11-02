@@ -73,6 +73,7 @@ def get_donation_data(request, id):
 
 def get_organization(request, id):
     organization_data = User.objects.filter(id=id)
+    print(organization_data[0].username)
     return HttpResponse(
         serializers.serialize("json", organization_data),
         content_type="application/json",
