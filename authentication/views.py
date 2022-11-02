@@ -25,7 +25,7 @@ def register(request):
                 role=User.USER if role == "user" else User.COMPANY,
             )
             if user.role == User.COMPANY:
-                profile = Profile.objects.create(organizations=user)
+                profile = Profile.objects.create(organization=user)
                 profile.save()
             messages.success(request, "Akun berhasil dibuat")
             return redirect("auth:login")
