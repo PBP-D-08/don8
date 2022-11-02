@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from authentication.models import User
-from organizations_profile.models import Profile
+from organizations_profile.models import Profile as OrgProfile
+from profile_pengguna.models import Profile as UserProfile
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, JsonResponse
@@ -25,7 +26,10 @@ def register(request):
                 role=User.USER if role == "user" else User.COMPANY,
             )
             if user.role == User.COMPANY:
-                profile = Profile.objects.create(organization=user)
+                profile = OrgProfile.objects.create(organization=user)
+                profile.save()
+            if user.role == User.USER:
+                profile = UserProfile.objects.create(user=user)
                 profile.save()
             messages.success(request, "Akun berhasil dibuat")
             return redirect("auth:login")
