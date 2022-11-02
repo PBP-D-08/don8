@@ -21,8 +21,11 @@ def show_support(request):
     return render(request, 'support.html', context)
 
 @login_required(login_url="/auth/login/")
-def show_json(request):
-    data_post = Post.objects.all()
+def show_json(request,filter):
+    if filter == "All":
+        data_post = Post.objects.all()
+    else:
+        data_post = Post.objects.filter(donation_name = filter)
     res = []
     for obj in data_post:
         # Cek apakah user sudah like atau belum

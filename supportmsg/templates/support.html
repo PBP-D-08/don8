@@ -10,6 +10,13 @@
             class="text-brokenwhite bg-green-medium py-2 px-3 mb-5 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50">
             Give Support
         </button>
+        <select name="filter-name" id="id_filter-name" required onchange="filterPost()"
+            class="col-span-2 form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none">
+            <option value="All" selected>All</option>
+            {% for name in donations %}
+            <option value="{{name.title}}">{{name.title}}</option>
+            {% endfor %}
+        </select>
         <div class="pt-6 flex flex-wrap items-center justify-center gap-10" id="message-cards">
             <!-- start card -->
             <!-- end card -->
@@ -101,7 +108,7 @@
     $("#create_post").click(openModal);
     $(".classtutup").click(closeModal);
 
-    function getPost() {
+    function getPost(filter) {
         const card = data => `
         <div
                 class="p-6 max-w-sm min-w-[20%] rounded-lg shadow-lg hover:shadow-xl hover:shadow-green-light bg-green-medium py-4 px-3 hover:scale-105 transition-all">
@@ -137,7 +144,7 @@
 
         $.ajax({
             type: "GET",
-            url: "json/",
+            url: "json/" + filter + "/",
             success: data => {
                 render(data);
                 // Mengubah button jika user sudah melakukan Like
@@ -163,7 +170,7 @@
             data: $("#post-form").serialize(),
 
             success: () => {
-                getPost()
+                getPost($('#id_filter-name').val())
                 $("#defaultModal").addClass("hidden")
             },
             dataType: 'json',
@@ -181,14 +188,18 @@
             data: { 'post_id': id, 'csrfmiddlewaretoken': '{{ csrf_token }}' },
             dataType: "json",
             success: () => {
-                getPost()
+                getPost($('#id_filter-name').val())
             },
 
         });
     }
+    function filterPost(){
+        getPost($('#id_filter-name').val())
+    }
+
 
     $(document).ready(() => {
-        getPost()
+        getPost($('#id_filter-name').val())
         $("#btnSubmit").click(addPost)
     });
 </script>
