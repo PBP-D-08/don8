@@ -6,7 +6,7 @@ from django.core.validators import MinLengthValidator
 class Donation(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
-    description = models.CharField(validators=[MinLengthValidator(38)])
+    description = models.CharField(max_length=255,validators=[MinLengthValidator(38)])
     date_created = models.DateField()
     date_expired = models.DateField()
     money_accumulated = models.IntegerField(default=0)
