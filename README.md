@@ -25,9 +25,9 @@ Tautan aplikasi Heroku: https://don8-proyek-ts.herokuapp.com/
 
    Halaman untuk melakukan pembayaran donasi
 
-4. **Halaman create new donation** 🆕
+4. **Modal create new donation** 🆕
    
-   Halaman untuk membuat jenis donasi baru bagi organisasi
+   Modal yang berisi form untuk membuat jenis donasi baru bagi organisasi
 
 5. **Profile donatur dan lembaga donasi** 👤
    - Halaman profile dari orang yang mendonasikan. 
@@ -41,7 +41,11 @@ Tautan aplikasi Heroku: https://don8-proyek-ts.herokuapp.com/
 
    Halaman support message berisikan pesan-pesan dukungan yang diberikan untuk donasi yang ada. Pesan-pesan yang telah disubmit juga dapat diberikan like.
 
-7. **Register dan Login untuk 2 jenis akun** 📝
+7. **Saved Donations** ⭐
+   
+   Fitur untuk donatur untuk menyimpan donasi-donasi yang mereka ingin simpan yang ditampilkan di sebuah halaman khusus. 
+
+8. **Register dan Login untuk 2 jenis akun** 📝
    
    Halaman register digunakan untuk menginput detail akun pengguna yang ingin mendaftarkan akunnya sebagai donatur ataupun organisasi. Halaman login.
 
@@ -55,3 +59,7 @@ Tautan aplikasi Heroku: https://don8-proyek-ts.herokuapp.com/
         - Uang yang donatur berikan kepada kegiatan tertentu akan terkumpul dan akan langsung diterima oleh organisasi tersebut untuk disalurkan kepada orang terkait. Jumlah uang yang terkumpul untuk masing-masing kegiatan akan ditampilkan juga, beserta target uang yang ingin dikumpulkan, pada halaman website kami.
         - Kegiatan penggalangan dana memiliki expired date yang ditentukan oleh organisasi yang membukanya di mana jika sudah terlewat maka tidak bisa melakukan donasi lagi pada kegiatan tersebut.
         - Organisasi akan mempunyai saldo juga untuk menampung uang yang berasal dari donatur. Organisasi dapat melakukan withdraw jika suatu saat ingin digunakan untuk diberikan kepada orang yang dituju dan sedang membutuhkan.
+
+9. **Leaderboard** 🥇
+
+   Halaman yang menampilkan donasi dengan akumulasi dana terbanyak dengan informasi rank dan nama donasi.
