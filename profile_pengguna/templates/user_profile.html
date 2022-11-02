@@ -1,0 +1,148 @@
+{% extends 'base.html' %} {% load static %} {% block meta %}
+    <title>Don8</title>
+{% endblock meta %} {% block content %}
+<div class="bg-brokenwhite min-h-screen">
+<br><br><br><br><br>
+<h2 class="font-bold text-green-dark text-[30px] md:text-[60px] text-center">Welcome, {{username}}!</h2>
+<br>
+<div class="text-center">
+  <p class="font-bold mb-4 text-[25px] items-center">
+    <span class="text-orange-dark font-normal">You have donated:</span><br>
+    Rp{{ money_donated }}.00
+  </p>
+  <p class="font-bold mb-4 text-[25px]">
+    <span class="text-orange-dark font-normal">Balance:</span><br>
+    Rp<span id="balance"></span>.00
+  </p>
+</div>
+<br>
+<div class="relative flex justify-center items-center  mt-4">
+  <button
+    class="text-brokenwhite bg-gradient-to-r from-green-dark to-green-medium py-4 px-5 rounded-lg hover:scale-110 hover:shadow-lg transition-all hover:shadow-gree-medium/70 text-[25px]"
+    id="topup"
+    >
+    <div class="flex items-center gap-3">
+        <p class="text-sm md:text-lg">Topup</p>
+    </div>
+  </button>
+</div>
+
+<!-- Start modal -->
+<!-- Main modal -->
+<div
+  id="defaultModal"
+  class="w-full fixed flex justify-center w-full z-10 min-h-screen items-center bg-green-dark bg-opacity-50 hidden inset-0 h-modal md:h-full">
+  <div class="relative p-4 w-full max-w-2xl h-full md:h-auto">
+    <!-- Modal content -->
+    <form method="POST" id="post-form">
+      {% csrf_token %}
+      <div class="relative bg-brokenwhite rounded-lg shadow">
+        <!-- Modal header -->
+        <div class="flex justify-between items-start p-4 rounded-t border-b">
+          <h3 class="text-xl font-semibold text-green-dark">
+            Topup Balance
+          </h3>
+          <button
+            onclick="reset()"
+            type="button"
+            class="classtutup text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+            <span class="sr-only">Close modal</span>
+          </button>
+        </div>
+        <!-- Modal body -->
+
+        <div class="p-6 space-y-6">
+          
+          <!-- Top Up Amount -->
+          <div class="md:flex md:items-center mb-6">
+            <label
+              class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
+              for="id_amount">
+              Input Top Up Amount:
+            </label>
+
+            <p class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4">Rp</p>
+            {{ form.amount }}
+            <p class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4">.00</p>
+
+          </div>
+        </div>
+
+        <!-- Modal footer -->
+        <div
+          class="flex items-center justify-center p-6 space-x-2 rounded-b border-t border-gray-200"
+        >
+          <div
+            class="text-brokenwhite bg-green-medium py-2 px-3 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50"
+          >
+            <button type="submit">Submit</button>
+          </div>
+          <div
+            class="text-white bg-orange-medium transition-all rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:scale-110 focus:z-10"
+          >
+            <button type="button" class="classtutup" onclick="reset()">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- end modal -->
+
+<script>
+const username = $(location).attr("pathname").split("/")[3];
+function refresh() {
+  $.getJSON("/profile/user/" + username + "/topup/", function (data) {
+    $("#balance").text(data[0].fields.balance);
+  })
+}
+
+function reset() {
+  $("#post-form").trigger("reset")
+}
+
+const openModal = e => {
+    $("#defaultModal").removeClass("hidden");
+};
+
+const closeModal = e => {
+    $("#defaultModal").removeClass("block");
+    $("#defaultModal").addClass("hidden");
+};
+
+$("#topup").click(openModal);
+$(".classtutup").click(closeModal);
+
+$(document).ready(() => {
+  refresh();
+})
+
+$(document).on("submit", "#post-form", function (e) {
+    e.preventDefault();
+    $.ajax({
+        type: "POST",
+        url: "",
+        data: $(this).serialize(),
+        success: function (response) {
+            $("#post-form").trigger("reset");
+            closeModal();
+            refresh();
+        },
+    })
+});
+</script>
+</div>
+{% endblock content %}

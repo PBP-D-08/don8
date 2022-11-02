@@ -9,14 +9,14 @@ import json
 # Create your views here.
 @login_required(login_url="/auth/login/")
 def show_saved(request, username):
-    if request.user.username != username and request.user.role != User.USER:
+    if request.user.username != username or request.user.role != User.USER:
         return HttpResponse("You are not authorized to view this page.")
     return render(request, "saved.html")
 
 
 @login_required(login_url="/auth/login/")
 def show_json(request, username):
-    if request.user.username != username and request.user.role != User.USER:
+    if request.user.username != username or request.user.role != User.USER:
         return HttpResponse("You are not authorized to view this page.")
     saved_donations = SavedDonation.objects.filter(user__username=username)
     donations = [sd.donation for sd in saved_donations]

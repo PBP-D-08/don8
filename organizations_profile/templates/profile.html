@@ -1,0 +1,572 @@
+{% extends 'base.html' %} {% load static %} {% block meta %}
+    <title>Don8</title>
+{% endblock meta %} {% block content %}
+    {% load l10n %}{% load i18n %}
+
+<script>
+    $(document).ready(() => {
+
+        const card = data => `
+            <div
+              class="rounded-lg shadow-lg bg-green-medium py-4 px-3 hover:scale-105 transition-all"
+            >
+              <div class="max-w-[250px] min-h-[150px] text-center text-brokenwhite">
+                <div
+                  class="w-[250px] h-[150px] rounded bg-cover bg-center"
+                  style="
+                    background-image: url(${data.fields.image_url});
+                  "
+                ></div>
+                <p class="font-bold text-orange-light mt-4 truncate">${data.fields.title}</p>
+                <p class="font-bold">
+                  <span class="text-orange-light">Rp</span> ${
+                    data.fields.money_accumulated
+                        .toLocaleString("en-US")
+                        .replaceAll(",", ".")
+                }
+                  <span class="text-orange-light font-normal text-xs">terkumpul</span>
+                </p>
+
+                <div class="h-3 bg-brokenwhite rounded-full mt-4">
+                  <div class="h-3 bg-orange-medium rounded-full w-[${
+                    (100 * data.fields.money_accumulated) / data.fields.money_needed
+                }%]"></div>
+                </div>
+                <!-- comment -->
+                <div class="relative flex justify-center items-center  mt-4">
+                {% if user.username != profile.username  %}
+                    <div>
+                        <button
+                          class="text-orange-dark font-bold bg-orange-light py-2 px-3 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50"
+                          id="donate_button"
+                          onclick= "location.href='/donation/${data.pk}'"
+                        >
+                          Donasi
+                        </button>
+                    </div>
+                {% endif %}
+                {% if user.username != profile.username and user.role == 1 %}
+                    <div class="absolute right-0 hover:scale-110 text-orange-light cursor-pointer flex-none" id="saved-${
+                    data.pk
+                    }" onclick="updateSaved(${data.pk})">
+                        ${data.fields.saved ?
+                        `<svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                            class="w-7 h-7"
+                          >
+                            <path
+                              fill-rule="evenodd"
+                              d="M6.32 2.577a49.255 49.255 0 0111.36 0c1.497.174 2.57 1.46 2.57 2.93V21a.75.75 0 01-1.085.67L12 18.089l-7.165 3.583A.75.75 0 013.75 21V5.507c0-1.47 1.073-2.756 2.57-2.93z"
+                              clip-rule="evenodd"
+                            />
+                          </svg>`
+                        :
+                        `<svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.5"
+                            stroke="currentColor"
+                            class="w-7 h-7"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z"
+                            />
+                          </svg>`
+                    }
+                    </div>
+                {% endif %}
+                </div>
+                <!-- endcomment -->
+              </div>
+            </div>`;
+
+        const render = data => {
+            const cards = data.map(card).join("");
+            $("#donations-card").html(cards);
+        };
+
+        $.ajax({
+            url: "donations",
+            type: "GET",
+            success: data => {
+                if (data.length > 0) {
+                    render(data);
+                } else {
+                    $("#donations-card").html(
+                        `<div class='text-center text-green-dark text-[15px] md:text-[20px] '>Maaf, saat ini sedang tidak tersedia donasi apapun.</div>`
+                    );
+                }
+            },
+            error: err => {
+                console.log(err);
+            },
+        });
+
+        $.ajax({
+            url: "{% url 'auth:check_login' %}",
+            type: "GET",
+            success: response => {
+                // console.log(response.is_login);
+                if (response.is_login) {
+                    if (response.username != "{{ profile.username }}") {
+                        $("#withdraw").hide();
+                    } else {
+                        $("#withdraw").show();
+                    }
+                }
+                else {
+                    $("#withdraw").hide();
+                }
+            },
+        });
+    });
+</script>
+{% language 'de' %}
+<div class="bg-brokenwhite min-h-screen ">
+    <div class="bg-fixed bg-no-repeat bg-right-bottom" style="background-image: url(/static/organizations_profile/5299.png)">
+        <div
+                class="max-w-[80%] mx-auto min-h-screen flex items-center justify-between gap-10"
+        >
+            <div>
+                <h1 class="font-bold text-green-dark text-[100px]">{{ profile.username }}</h1>
+                <div class="flex items-center">
+                    <h3 class="font-bold text-green-light text-[45px]">Telah berhasil &nbsp</h3>
+                    <h3 class="font-bold text-green-dark text-[50px]">mengumpulkan</h3>
+                </div>
+                <div class="flex items-center">
+                    <p class="font-bold text-green-light text-[40px] text-justify">Rp &nbsp</p>
+                    <p class="text-green-dark font-bold text-[50px] text-justify">{{ profile.balance }}</p>
+                    <p class="font-bold text-green-light text-[40px] text-justify">.00</p>
+                </div>
+                <div class="flex items-center">
+                    <p class="font-bold text-green-light mb-[30px] text-[45px] text-justify"> Dari &nbsp</p>
+                    <p class="font-bold text-green-dark mb-[30px] text-[50px] text-justify">{{ org_profile.total_campaign }}</p>
+                    <p class="font-bold text-green-light mb-[30px] text-[45px] text-justify"> &nbsp penggalangan dana</p>
+                </div>
+                <button
+                        class="text-brokenwhite bg-gradient-to-r from-green-dark to-green-medium py-4 px-5 rounded-lg hover:scale-110 hover:shadow-lg transition-all hover:shadow-gree-medium/70 text-[25px]"
+                        id="withdraw"
+                >
+                    <div class="flex items-center gap-3">
+                        <p class="text-sm md:text-lg">Withdraw</p>
+                        <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke-width="1.5"
+                                stroke="currentColor"
+                                class="w-6 h-6 animate-bounce"
+                        >
+                            <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M19.5 5.25l-7.5 7.5-7.5-7.5m15 6l-7.5 7.5-7.5-7.5"
+                            />
+                        </svg>
+                    </div>
+                </button>
+            </div>
+            <div
+                    class="rounded-lg shadow-lg bg-green-medium py-4 px-3 hover:scale-150 transition-all"
+            >
+                <div class="min-w-[250px] max-h-[150px] text-center text-brokenwhite">
+                    <p class="font-bold text-orange-light text-[35px] mt-4 mb-2">Catatan Keuangan</p>
+                    <p class="font-bold text-[25px] mb-1">
+                        <span class="text-orange-light font-normal">Rp</span>
+                        {{ profile.balance }}
+                        <span class="text-orange-light font-normal">.00 terkumpul</span>
+                    </p>
+                    <p class="font-bold mb-4 text-[25px]" id="money">
+                        <span class="text-orange-light font-normal">Rp</span>
+                        {{ org_profile.withdrawn }}
+                        <span class="text-orange-light font-normal">.00 ditarik</span>
+                    </p>
+
+                </div>
+            </div>
+        </div> <!-- organizations profile -->
+
+        <div class="max-w-[80%] mx-auto min-h-screen py-20" id="donations">
+            <h1 class="text-green-dark text-[50px] font-bold mb-10 text-center">
+                Our Campaigns
+            </h1>
+
+            <div class="flex flex-wrap items-center justify-center mb-10"
+                 role="group"
+            >
+                <button type="button" id="all-button"
+                        class="py-4 px-6 text-sm font-medium text-brokenwhite bg-brokenwhite rounded-l-lg border border-green-dark hover:bg-green-medium hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-brokenwhite dark:bg-green-medium dark:border-green-dark dark:text-brokenwhite dark:hover:text-brokenwhite dark:hover:bg-green-dark dark:focus:ring-green-dark dark:focus:text-brokenwhite">
+                    All
+                </button>
+                <button type="button" id="completed-button"
+                        class="py-4 px-6 text-sm font-medium text-brokenwhite bg-brokenwhite border-t border-b border-green-dark hover:bg-green-medium hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-brokenwhite dark:bg-green-medium dark:border-green-dark dark:text-brokenwhite dark:hover:text-brokenwhite dark:hover:bg-green-dark dark:focus:ring-green-dark dark:focus:text-brokenwhite">
+                    Completed
+                </button>
+                <button type="button" id="expired-button"
+                        class="py-4 px-6 text-sm font-medium text-brokenwhite bg-brokenwhite border-t border-b border-green-dark hover:bg-green-medium hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-brokenwhite dark:bg-green-medium dark:border-green-dark dark:text-brokenwhite dark:hover:text-brokenwhite dark:hover:bg-green-dark dark:focus:ring-green-dark dark:focus:text-brokenwhite">
+                    Expired
+                </button>
+                <button type="button" id="progress-button"
+                        class="py-4 px-6 text-sm font-medium text-brokenwhite bg-brokenwhite rounded-r-md border border-green-dark hover:bg-green-medium hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-brokenwhite dark:bg-green-medium dark:border-green-dark dark:text-brokenwhite dark:hover:text-brokenwhite dark:hover:bg-green-dark dark:focus:ring-green-dark dark:focus:text-brokenwhite">
+                    In Progress
+                </button>
+            </div>
+
+            <div
+                    class="flex flex-wrap items-center justify-center gap-10"
+                    id="donations-card"
+            >
+                <!-- start card -->
+                <!-- end card -->
+            </div>
+        </div>
+    </div>
+    <div
+            id="defaultModal"
+            class="w-full fixed flex justify-center w-full z-10 min-h-screen items-center bg-green-dark bg-opacity-50 hidden inset-0 h-modal md:h-full"
+    >
+        <div class="relative p-4 w-full max-w-2xl h-full md:h-auto">
+            <!-- Modal content -->
+            <form method="POST" id="post-form">
+                {% csrf_token %}
+                <div class="relative bg-brokenwhite rounded-lg shadow">
+                    <!-- Modal header -->
+                    <div class="flex justify-between items-start p-4 rounded-t border-b">
+                        <h3 class="text-xl font-semibold text-green-dark">
+                            Withdraw
+                        </h3>
+                        <button
+                                type="button"
+                                class="classtutup text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
+                        >
+                            <svg
+                                    class="w-5 h-5"
+                                    fill="currentColor"
+                                    viewBox="0 0 20 20"
+                                    xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                        fill-rule="evenodd"
+                                        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                        clip-rule="evenodd"
+                                ></path>
+                            </svg>
+                            <span class="sr-only">Close modal</span>
+                        </button>
+                    </div>
+                    <!-- Modal body -->
+
+                    <div class="p-6 space-y-6">
+                        <!-- Title input -->
+                        <div class="md:flex md:items-center mb-6">
+                            <label
+                                    class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
+                            >
+                                How much do you want to withdraw?
+                            </label>
+                        </div>
+                        <!-- Description input -->
+                        <div class="md:flex md:items-center mb-6">
+
+                                <label
+                                        class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
+                                        for="id_amount"
+                                >
+                                    Amount
+                                </label>
+
+
+                                <p class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"> Rp</p>
+                                {{ form.amount }}
+                                <p class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"> .00</p>
+
+                        </div>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div
+                            class="flex items-center justify-center p-6 space-x-2 rounded-b border-t border-gray-200"
+                    >
+                        <div
+                                class="text-brokenwhite bg-green-medium py-2 px-3 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50"
+                        >
+                            <button type="submit">Withdraw</button>
+                        </div>
+                        <div
+                                class="text-white bg-orange-medium transition-all rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:scale-110 focus:z-10"
+                        >
+                            <button type="button" class="classtutup">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div> <!--modal-->
+</div>
+    {% endlanguage %}
+<script>
+    const openModal = e => {
+        $("#defaultModal").removeClass("hidden");
+    };
+
+    const closeModal = e => {
+        $("#defaultModal").removeClass("block");
+        $("#defaultModal").addClass("hidden");
+    };
+
+    $("#withdraw").click(openModal);
+    $(".classtutup").click(closeModal);
+
+    $(document).on("submit", "#post-form", function (e) {
+        e.preventDefault();
+        $.ajax({
+            type: "POST",
+            url: "",
+            data: {
+                amount: $("#id_amount").val(),
+                csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+                action: "post",
+            },
+            success: function (response) {
+                $("#post-form").trigger("reset");
+                closeModal();
+                document.getElementById("money").innerHTML = `
+                <span class="text-orange-light font-normal">Rp </span>
+                        ${response.profile_w
+                    .toLocaleString("en-US")
+                    .replaceAll(",", ".")}
+                <span class="text-orange-light font-normal">.00 ditarik</span>`;
+            },
+        })
+
+    });
+
+    const new_card = data => `
+            <div
+              class="rounded-lg shadow-lg bg-green-medium py-4 px-3 hover:scale-105 transition-all"
+            >
+              <div class="max-w-[250px] min-h-[150px] text-center text-brokenwhite">
+                <div
+                  class="w-[250px] h-[150px] rounded bg-cover bg-center"
+                  style="
+                    background-image: url(${data.fields.image_url});
+                  "
+                ></div>
+                <p class="font-bold text-orange-light mt-4 truncate">${data.fields.title}</p>
+                <p class="font-bold">
+                  <span class="text-orange-light">Rp</span> ${
+                    data.fields.money_accumulated
+                        .toLocaleString("en-US")
+                        .replaceAll(",", ".")
+    }
+                  <span class="text-orange-light font-normal text-xs">terkumpul</span>
+                </p>
+                <div class="h-3 bg-brokenwhite rounded-full mt-4">
+                  <div class="h-3 bg-orange-medium rounded-full w-[${
+        (100 * data.fields.money_accumulated) / data.fields.money_needed
+    }%]"></div>
+                </div>
+                <!-- comment -->
+                <div class="relative flex justify-center items-center  mt-4">
+                {% if user.username != profile.username  %}
+                    <div>
+                        <button
+                          class="text-orange-dark font-bold bg-orange-light py-2 px-3 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50"
+                          id="donate_button"
+                          onclick= "location.href='/donation/${data.pk}'"
+                        >
+                          Donasi
+                        </button>
+                    </div>
+                {% endif %}
+                {% if user.username != profile.username and user.role == 1 %}
+                    <div class="absolute right-0 hover:scale-110 text-orange-light cursor-pointer flex-none" id="saved-${
+        data.pk
+    }" onclick="updateSaved(${data.pk})">
+                        ${data.fields.saved ?
+        `<svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                            class="w-7 h-7"
+                          >
+                            <path
+                              fill-rule="evenodd"
+                              d="M6.32 2.577a49.255 49.255 0 0111.36 0c1.497.174 2.57 1.46 2.57 2.93V21a.75.75 0 01-1.085.67L12 18.089l-7.165 3.583A.75.75 0 013.75 21V5.507c0-1.47 1.073-2.756 2.57-2.93z"
+                              clip-rule="evenodd"
+                            />
+                          </svg>`
+        :
+        `<svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.5"
+                            stroke="currentColor"
+                            class="w-7 h-7"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z"
+                            />
+                          </svg>`
+    }
+                    </div>
+                {% endif %}
+                </div>
+                <!-- endcomment -->
+              </div>
+            </div>`;
+
+    const render = data => {
+        const new_cards = data.map(new_card).join("");
+        $("#donations-card").html(new_cards);
+    };
+
+    $("#all-button").click(function (e){
+        $.ajax({
+            url: "donations",
+            type: "GET",
+            success: data => {
+                if (data.length > 0) {
+                    render(data);
+                } else {
+                    $("#donations-card").html(
+                        `<div class='text-center text-green-dark text-[15px] md:text-[20px] '>Maaf, saat ini sedang tidak tersedia donasi apapun.</div>`
+                    );
+                }
+            },
+            error: err => {
+                console.log(err);
+            },
+        });
+    });
+
+    $("#completed-button").click(function (e){
+        $.ajax({
+            url: "donationscomp",
+            type: "GET",
+            success: data => {
+                if (data.length > 0) {
+                    render(data);
+                } else {
+                    $("#donations-card").html(
+                        `<div class='text-center text-green-dark text-[15px] md:text-[20px] '>Maaf, saat ini sedang tidak tersedia donasi apapun.</div>`
+                    );
+                }
+            },
+            error: err => {
+                console.log(err);
+            },
+        });
+    });
+
+    $("#expired-button").click(function (e){
+        $.ajax({
+            url: "donationsexp",
+            type: "GET",
+            success: data => {
+                if (data.length > 0) {
+                    render(data);
+                } else {
+                    $("#donations-card").html(
+                        `<div class='text-center text-green-dark text-[15px] md:text-[20px] '>Maaf, saat ini sedang tidak tersedia donasi apapun.</div>`
+                    );
+                }
+            },
+            error: err => {
+                console.log(err);
+            },
+        });
+    });
+
+    $("#progress-button").click(function (e){
+        $.ajax({
+            url: "donationspro",
+            type: "GET",
+            success: data => {
+                if (data.length > 0) {
+                    render(data);
+                } else {
+                    $("#donations-card").html(
+                        `<div class='text-center text-green-dark text-[15px] md:text-[20px] '>Maaf, saat ini sedang tidak tersedia donasi apapun.</div>`
+                    );
+                }
+            },
+            error: err => {
+                console.log(err);
+            },
+        });
+    });
+
+    const updateSaved = id => {
+        const csrftoken = document.querySelector(
+            "[name=csrfmiddlewaretoken]"
+        ).value;
+        $.ajax({
+            url: "/saved/",
+            type: "POST",
+            headers: { "X-CSRFToken": csrftoken }, // give CSRF token to the header
+            mode: "same-origin", // Do not send CSRF token to another domain.
+            data: {
+                id: id,
+            },
+            success: response => {
+                if (response.status == 200) {
+                    $(`#saved-${id}`).html(`
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  class="w-7 h-7"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M6.32 2.577a49.255 49.255 0 0111.36 0c1.497.174 2.57 1.46 2.57 2.93V21a.75.75 0 01-1.085.67L12 18.089l-7.165 3.583A.75.75 0 013.75 21V5.507c0-1.47 1.073-2.756 2.57-2.93z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              `);
+                } else {
+                    $.ajax({
+                        url: `/saved/delete/${id}/`,
+                        type: "DELETE",
+                        headers: { "X-CSRFToken": csrftoken }, // give CSRF token to the header
+                        mode: "same-origin", // Do not send CSRF token to another domain.
+                        success: Response => {
+                            if (Response.status == 200) {
+                                $(`#saved-${id}`).html(`
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-7 h-7"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z"
+                      />
+                    </svg>
+                  `);
+                            }
+                        },
+                    });
+                }
+            },
+            error: error => {
+                console.log(error);
+            },
+        });
+    };
+
+</script>
+{% endblock content %}
