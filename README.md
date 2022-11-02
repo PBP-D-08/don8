@@ -59,3 +59,7 @@ Tautan aplikasi Heroku: https://don8-proyek-ts.herokuapp.com/
         - Uang yang donatur berikan kepada kegiatan tertentu akan terkumpul dan akan langsung diterima oleh organisasi tersebut untuk disalurkan kepada orang terkait. Jumlah uang yang terkumpul untuk masing-masing kegiatan akan ditampilkan juga, beserta target uang yang ingin dikumpulkan, pada halaman website kami.
         - Kegiatan penggalangan dana memiliki expired date yang ditentukan oleh organisasi yang membukanya di mana jika sudah terlewat maka tidak bisa melakukan donasi lagi pada kegiatan tersebut.
         - Organisasi akan mempunyai saldo juga untuk menampung uang yang berasal dari donatur. Organisasi dapat melakukan withdraw jika suatu saat ingin digunakan untuk diberikan kepada orang yang dituju dan sedang membutuhkan.
+
+9. **Leaderboard** 🥇
+
+   Halaman yang menampilkan donasi dengan akumulasi dana terbanyak dengan informasi rank dan nama donasi.
