@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
-from profile_pengguna.models import Profile
+from profile_pengguna.models import ProfileU
 from django.core.serializers.json import DjangoJSONEncoder
 import json
 from authentication.models import User
@@ -24,7 +24,7 @@ def profile_pengguna(request, username):
     for d in donations:
         money_donated += d.amount_of_donation
 
-    profile = Profile.objects.get(user=userp)
+    profile = ProfileU.objects.get(user=userp)
     profile.money_donated = money_donated
     
     profile.save()
