@@ -57,7 +57,7 @@ def add_message(request):
         post = Post(
             author=request.user,
             author_name=request.user.username,
-            donation_name = request.POST["donation_name"],
+            donation_name = request.POST["donation-name"],
             message=request.POST["message"],
         )
         post.save()

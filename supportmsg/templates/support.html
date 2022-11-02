@@ -51,12 +51,13 @@
                         <!-- input -->
                         <h5 class="text-green-dark font-bold text-left">Donation Name</h5>
                         <div class="md:flex md:items-center mb-6">
-                            {{form.donation_name}}
-                            <!-- <select name="donation-name" id="id_donation-name" required
+                            <!-- {{form.donation_name}} -->
+                            <select name="donation-name" id="id_donation-name" required
                             class="col-span-2 form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none">
                             {% for name in donations %}
-                            <option value={{name.title}}>{{name.title}}</option>
-                            {% endfor %} -->
+                                <option value="{{name.title}}">{{name.title}}</option>
+                            {% endfor %}
+                            </select>
                         </div>
                         <h5 class="text-green-dark font-bold text-left">Message</h5>
                         <div class="md:flex md:items-center mb-6">
