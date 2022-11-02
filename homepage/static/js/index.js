@@ -6,9 +6,6 @@ const closeModal = e => {
   $("#defaultModal").addClass("hidden");
 };
 
-$("#create-donation").click(openModal);
-$(".classtutup").click(closeModal);
-
 const updateSaved = id => {
   const csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
   $.ajax({
@@ -71,6 +68,9 @@ const updateSaved = id => {
 };
 
 $(document).ready(() => {
+  $("#create-donation").click(openModal);
+  $(".classtutup").click(closeModal);
+
   const render = data => {
     const cards = data.map(card).join("");
     $("#donations-card").html(cards);
@@ -103,7 +103,7 @@ $(document).on("submit", "#post-form", function (e) {
   e.preventDefault();
   $.ajax({
     type: "POST",
-    url: "{% url 'homepage:add_ajax_donation' %}",
+    url: "/add_ajax_donation/",
     dataType: "json",
     data: {
       title: $("#title").val(),
