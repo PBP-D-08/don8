@@ -36,17 +36,6 @@
     {% block meta %} {% endblock meta %}
   </head>
 
-  <script>
-    // check if user is logged in
-    $(document).ready(() => {
-      $.ajax({
-        url: "{% url 'auth:check_login' %}",
-        type: "GET",
-        success: response => {},
-      });
-    });
-  </script>
-
   <body>
     {% include 'navbar.html' %}
     {% block content %} {% endblock content %}

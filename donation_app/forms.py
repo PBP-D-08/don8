@@ -1,7 +1,7 @@
 from django import forms
 from donation_app.models import UserDonation
 from homepage.models import Donation
-from organizations_profile.models import Profile
+from organizations_profile.models import ProfileO
 import datetime
 
 class DonationForm(forms.ModelForm):
@@ -16,13 +16,13 @@ class DonationForm(forms.ModelForm):
 
         user = request.user # user dengan role pengguna
         donation = Donation.objects.get(id=donation_id)
-        organization = Profile.objects.get(organization=donation.user)
+        organization = ProfileO.objects.get(organization=donation.user)
         amount_of_donation = self.cleaned_data.get("amount_of_donation", -1)
 
         if user.balance - amount_of_donation >= 0:
-
             donation.money_accumulated = donation.money_accumulated + amount_of_donation
             organization.total_campaign = organization.total_campaign + amount_of_donation
+            donation.user.balance = donation.user.balance + amount_of_donation
             user.balance = user.balance - amount_of_donation
 
             UserDonation.objects.create(
@@ -36,6 +36,7 @@ class DonationForm(forms.ModelForm):
             donation.save()
             organization.save()
             user.save()
+            donation.user.save()
 
             data = {"message": "Success", "money_accumulated": donation.money_accumulated, "money_needed": donation.money_needed}
 
