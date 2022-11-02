@@ -1,5 +1,4 @@
 from django import forms
-from .models import ProfileU
 
 class Form(forms.Form):
     amount = forms.IntegerField(widget=forms.NumberInput(attrs={

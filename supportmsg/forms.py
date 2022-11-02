@@ -3,12 +3,15 @@ from homepage.models import Donation
 
 class PostForm(forms.Form):
     def donations():
-        all_donation = Donation.objects.all()
         result = []
-        for i in all_donation:
-            temp = (f"{i.title}",f"{i.title}")
-            result.append(temp)
-        
+        try:
+            all_donation = Donation.objects.all()
+            for i in all_donation:
+                temp = (f"{i.title}",f"{i.title}")
+                result.append(temp)
+        except:
+            pass
+            
         return result
 
     message = forms.CharField(label="Your Message", widget=forms.Textarea)

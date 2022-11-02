@@ -41,10 +41,10 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "homepage",
     "authentication",
+    'donation_app',
     "saved",
     "organizations_profile",
     "supportmsg",
-    'donation_app',
     'profile_pengguna',
     "leaderboard"
 ]
