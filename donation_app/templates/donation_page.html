@@ -243,7 +243,6 @@
                     amount_of_donation: $("#id_amount_of_donation").val(),
                 },
                 success: function (response) {
-                    console.log(response["data"])
                     $("#make-donation-form").trigger("reset");
                     closeDonationModal();
 
@@ -349,8 +348,8 @@
     </div>
 </div>
 
-<div class="bg-brokenwhite min-h-screen py-10">
-    <div class="max-w-[80%] mx-auto min-h-screen flex flex-col items-center justify-center">
+<div class="bg-brokenwhite min-h-screen py-24 md:py-10">
+    <div class="max-w-[80%] mx-auto min-h-screen flex flex-col justify-center">
         <div class="row-2 flex gap-8 flex-col items-center lg:justify-center">
             <div class="col-2 flex lg:flex-row gap-8 flex-col items-center lg:justify-center" style="width: 100%">
                 <div class="bg-green-medium p-5 rounded-3xl text-brokenwhite p-7" style="width: min(100%, 600px)"
