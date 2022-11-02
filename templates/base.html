@@ -28,52 +28,27 @@
       };
     </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="{% static 'js/script.js' %}"></script>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/flowbite@1.5.3/dist/flowbite.min.css"
+    />
     {% block meta %} {% endblock meta %}
   </head>
 
   <script>
     // check if user is logged in
-    $(document).ready(function () {
+    $(document).ready(() => {
       $.ajax({
         url: "{% url 'auth:check_login' %}",
         type: "GET",
-        success: response => {
-          // console.log(response.is_login);
-          if (response.is_login) {
-            $("#login").hide();
-            $("#logout").show();
-            $("#profile").show();
-
-            // profile change innerhtml
-            $("#profile").html(response.username);
-            // TODO: Ganti sesuai Task no 3
-            $("#profile").attr("href", "/profile/" + response.username);
-
-            // check if role is user
-            if (response.role == 1) {
-              $("#donation-history").show();
-              // donation history juga ganti attribute hrefnya
-              
-              $("#create-donation").hide();
-              // create donation juga ganti attribute hrefnya
-            } else {
-              $("#donation-history").hide();
-              $("#create-donation").show();
-            }
-          } else {
-            $("#login").show();
-            $("#logout").hide();
-            $("#profile").hide();
-            $("#donation-history").hide();
-            $("#create-donation").hide();
-          }
-        },
+        success: response => {},
       });
     });
   </script>
 
   <body>
-    <nav
+    <!-- <nav
       class="fixed flex w-full justify-between py-5 px-10 items-center bg-green-light shadow-lg shadow-green-dark/30 z-10"
     >
       <a
@@ -85,14 +60,43 @@
         <a
           id="donation-history"
           class="hover:scale-110 transition-all cursor-pointer"
+          href="{% url 'supportmsg:show_support' %}"
+          >Messages</a
+        >
+        {% if user.is_authenticated and user.role == 1 and not user.is_superuser %}
+        <a
+          id="donation-history"
+          class="hover:scale-110 transition-all cursor-pointer"
           href="/donations-history/"
           >Donation History</a
         >
+        {% endif %} {% if user.is_authenticated and user.role == 1 and not user.is_superuser %}
+        <a
+          id="saved-donation"
+          class="hover:scale-110 transition-all cursor-pointer"
+          href="{% url 'saved:show_saved' request.user.username %}"
+          ><svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z"
+            />
+          </svg>
+        </a>
+        {% endif %} {% if request.user.is_authenticated and request.user.role == 2 %}
         <span
           id="create-donation"
           class="hover:scale-110 transition-all cursor-pointer"
           >Create Donation</span
         >
+        {% endif %} {% if not request.user.is_authenticated %}
         <button
           id="login"
           class="text-brokenwhite bg-gradient-to-r from-green-dark to-green-medium py-2 px-3 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50"
@@ -100,12 +104,15 @@
         >
           Login
         </button>
+        {% endif %} {% if request.user.is_authenticated %}
         <a
           a
           id="profile"
-          href=""
+          href="/profile/{{ request.user.username }}"
           class="hover:scale-110 transition-all cursor-pointer border-2 border-green-medium bg-gradient-to-r from-green-light to-brokenwhite p-2 rounded-full hover:shadow-md transition-all hover:shadow-brokenwhite/50"
-        ></a>
+          >{{ request.user.username }}</a
+        >
+        {% endif %} {% if request.user.is_authenticated %}
         <button
           id="logout"
           class="text-brokenwhite bg-gradient-to-r from-green-dark to-green-medium py-2 px-3 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50"
@@ -113,8 +120,10 @@
         >
           Logout
         </button>
+        {% endif %}
       </div>
-    </nav>
+    </nav> -->
+    {% include 'navbar.html' %}
     {% block content %} {% endblock content %}
     {% include 'footer.html' %}
   </body>

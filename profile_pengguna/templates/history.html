@@ -1,0 +1,89 @@
+{% extends 'base.html' %} {% load static %} {% block meta %}
+<title>History</title>
+{% endblock meta %} {% block content %}
+<div class="bg-brokenwhite min-h-screen">
+  <div class="max-w-[80%] mx-auto min-h-screen py-28" id="donations">
+    <div
+      class="flex gap-5 items-center justify-center text-green-dark text-[30px] md:text-[50px] font-bold mb-10 text-center">
+      <span> Donating History </span>
+    </div>
+    <form action="POST" class="hidden">{% csrf_token %}</form>
+    <div id="no-donation"></div>
+    <div
+      class="flex flex-wrap items-center justify-center gap-10"
+      id="history"
+    >
+      <!-- start card -->
+      <!-- end card -->
+    </div>
+  </div>
+</div>
+
+<script>
+  const username = $(location).attr("pathname").split("/")[3];
+
+  $(document).ready(() => {
+    const render = data => {
+      const cards = data.map(history_card).join("");
+      $("#history").html(cards);
+    };
+
+    $.ajax({
+      url: "/profile/user/" + username + "/history/json/",
+      type: "GET",
+      success: data => {
+
+        if (data.length == 0) {
+          $("#no-donation").html(
+            "<div class='text-center text-green-dark text-[15px] md:text-[20px] '>You haven't donated yet :(</div>"
+          );
+        } else {
+          var htmlString = '';
+          $.each(data, function(i, entry){
+            htmlString += `<div
+              class="rounded-lg shadow-lg hover:shadow-xl hover:shadow-green-light bg-green-medium py-4 px-3 hover:scale-105 transition-all"
+              id="card-${entry.pk}">
+              <div class="max-w-[250px] min-h-[150px] text-center text-brokenwhite">
+                <div
+                  class="w-[250px] h-[150px] rounded bg-cover bg-center"
+                  style="
+                    background-image: url(${entry.fields.image_url});
+                  "
+                ></div>
+                <p class="font-bold text-orange-light mt-4 truncate">${
+                  entry.fields.title
+                }</p>
+                <p class="font-bold text-orange-light mt-4 truncate">
+                  <span class="text-orange-light font-normal text-xs">
+                  ${
+                    entry.fields.date
+                }</span></p>
+                <p class="font-bold">
+                  <span class="text-orange-light">Rp</span> ${entry.fields.amount}
+                  <span class="text-orange-light font-normal text-xs">donated</span>
+                </p>
+                <div class="relative flex justify-center items-center  mt-4">
+                  <div class="grow">
+                    <button
+                      class="text-orange-dark font-bold bg-orange-light py-2 px-3 rounded hover:scale-110 hover:shadow-md transition-all hover:shadow-brokenwhite/50"
+                      onclick="location.href='/donation/${entry.fields.donation}';"
+                    >
+                      Donasi lagi
+                    </button>
+                  </div>
+                  
+                </div>
+              </div>
+            </div>`
+          });
+          console.log(htmlString);
+          $("#history").html(htmlString);
+        }
+      },
+      error: error => {
+        console.log(error);
+      },
+    });
+  });
+</script>
+{% endblock content %}
