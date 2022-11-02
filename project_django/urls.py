@@ -25,6 +25,7 @@ urlpatterns = [
     path("message/", include("supportmsg.urls")),
     path("donation/", include("donation_app.urls")),
     path("leaderboard/", include("leaderboard.urls")),
+    path("profile/user/", include("profile_pengguna.urls")),
 ]
 
 # TODO: Implement Routings Here

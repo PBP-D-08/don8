@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "organizations_profile",
     "supportmsg",
     'donation_app',
+    'profile_pengguna',
     "leaderboard"
 ]
 

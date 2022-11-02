@@ -83,7 +83,7 @@
           {% if user.is_authenticated and user.role == 1 and not user.is_superuser %}
           <li>
             <a
-              href="#"
+              href="{% url 'profile/user:show_donated' request.user.username %}"
               class="block py-2 px-4 text-sm text-green-dark hover:bg-green-light/25"
               >Donations History</a
             >
