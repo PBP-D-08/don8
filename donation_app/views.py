@@ -30,7 +30,7 @@ def make_donation(request, id):
         request.session["last_donation" + str(id)] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         data = form.save(request, id)  # form.save() return data
         
-        return JsonResponse({"data": form.save(request, id), "time": request.session["last_donation" + str(id)]})
+        return JsonResponse({"data": data, "time": request.session["last_donation" + str(id)]})
 
 
 def show_json(request):

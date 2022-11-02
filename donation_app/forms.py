@@ -20,7 +20,6 @@ class DonationForm(forms.ModelForm):
         amount_of_donation = self.cleaned_data.get("amount_of_donation", -1)
 
         if user.balance - amount_of_donation >= 0:
-
             donation.money_accumulated = donation.money_accumulated + amount_of_donation
             organization.total_campaign = organization.total_campaign + amount_of_donation
             user.balance = user.balance - amount_of_donation
