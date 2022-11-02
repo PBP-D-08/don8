@@ -12,7 +12,7 @@ from django.core import serializers
 # Create your views here.
 @login_required(login_url="/auth/login/")
 def profile_pengguna(request, username):
-    if request.user.username != username and request.user.role != User.USER:
+    if request.user.username != username or request.user.role != User.USER:
         return HttpResponse("You are not authorized to view this page.")
 
     profiles = list(User.objects.filter(username=username))
@@ -54,13 +54,13 @@ def profile_pengguna(request, username):
 
 @login_required(login_url="/auth/login/")
 def show_donated(request, username):
-    if request.user.username != username and request.user.role != User.USER:
+    if request.user.username != username or request.user.role != User.USER:
         return HttpResponse("You are not authorized to view this page.")
     return render(request, "history.html")
 
 @login_required(login_url="/auth/login/")
 def show_json_history(request, username):
-    if request.user.username != username and request.user.role != User.USER:
+    if request.user.username != username or request.user.role != User.USER:
         return HttpResponse("You are not authorized to view this page.")
     
     profile = UserDonation.objects.filter(user=request.user)

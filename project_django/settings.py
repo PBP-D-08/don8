@@ -42,9 +42,11 @@ INSTALLED_APPS = [
     "homepage",
     "authentication",
     "saved",
+    "organizations_profile",
     "supportmsg",
     'donation_app',
     'profile_pengguna',
+    "leaderboard"
 ]
 
 AUTH_USER_MODEL = "authentication.User"
@@ -122,7 +124,11 @@ TIME_ZONE = "UTC"
 
 USE_I18N = True
 
+USE_L10N = True
+
 USE_TZ = True
+
+USE_THOUSAND_SEPARATOR = True
 
 
 # Static files (CSS, JavaScript, Images)

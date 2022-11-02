@@ -124,7 +124,7 @@
                             Like This Post
                         </button>
 
-                        <p class="text-orange-light py-2 pl-2 text-xl">${data.fields.likes.length} ❤</p>
+                        <p class="text-orange-light py-2 pl-2 text-xl">${data.fields.likes_count} ❤</p>
                     </div>
                 </div>
             </div>`;
@@ -139,7 +139,14 @@
             url: "json/",
             success: data => {
                 render(data);
-                // console.log(data)
+                // Mengubah button jika user sudah melakukan Like
+                for (i in data){
+                    if (data[i].fields.like_status){
+                        cardButton = document.getElementById("post-"+data[i].pk);
+                        cardButton.innerHTML = "Unlike This Post";
+                        cardButton.className = "text-orange-light font-bold bg-orange-dark py-2 px-3 rounded hover:scale-105 hover:shadow-md transition-all hover:shadow-brokenwhite/50";
+                    }
+                }
             },
             error: err => {
                 console.log(err);
@@ -160,9 +167,7 @@
             },
             dataType: 'json',
             error: function (xhr, resp, text) {
-                console.log("xhr", xhr)
-                console.log("resp", resp)
-                console.log("text", text)
+                alert("Pesan tidak dapat kosong")
             }
 
         });
