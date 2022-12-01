@@ -1,5 +1,5 @@
 {% extends 'base.html' %} {% load static %} {% block meta %}
-    <title>Don8</title>
+    <title>Profile</title>
 {% endblock meta %} {% block content %}
 <div class="bg-brokenwhite min-h-screen">
 <br><br><br><br><br>
@@ -8,7 +8,7 @@
 <div class="text-center">
   <p class="font-bold mb-4 text-[25px] items-center">
     <span class="text-orange-dark font-normal">You have donated:</span><br>
-    Rp{{ money_donated }}.00
+    Rp<span id="donated"></span>.00
   </p>
   <p class="font-bold mb-4 text-[25px]">
     <span class="text-orange-dark font-normal">Balance:</span><br>
@@ -26,6 +26,7 @@
     </div>
   </button>
 </div>
+<br>
 
 <!-- Start modal -->
 <!-- Main modal -->
@@ -106,7 +107,10 @@
 const username = $(location).attr("pathname").split("/")[3];
 function refresh() {
   $.getJSON("/profile/user/" + username + "/topup/", function (data) {
-    $("#balance").text(data[0].fields.balance);
+    $("#balance").text(data[0].fields.balance.toLocaleString("en-US").replaceAll(",", "."));
+  })
+  $.getJSON("/profile/user/" + username + "/amount/", function (data) {
+    $("#donated").text(data[0].fields.money_donated.toLocaleString("en-US").replaceAll(",", "."));
   })
 }
 

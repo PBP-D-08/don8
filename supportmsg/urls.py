@@ -8,7 +8,7 @@ app_name = 'supportmsg'
 
 urlpatterns = [
     path('', show_support, name='show_support'),
-    path('json/', show_json, name='show_json'),
+    path('json/<str:filter>/', show_json, name='show_json'),
     path('add-message/', add_message, name="add_message"),
     path('like-post/', like_post, name="like_post"),
 ]
