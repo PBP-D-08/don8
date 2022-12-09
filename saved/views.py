@@ -4,6 +4,7 @@ from saved.models import SavedDonation
 from django.contrib.auth.decorators import login_required
 from authentication.models import User
 from django.core.serializers.json import DjangoJSONEncoder
+from django.views.decorators.csrf import csrf_exempt
 import json
 
 # Create your views here.
@@ -44,6 +45,7 @@ def show_json(request, username):
     )
 
 
+@csrf_exempt
 @login_required(login_url="/auth/login/")
 def create_saved(request):
     if request.user.role != User.USER:
@@ -58,6 +60,7 @@ def create_saved(request):
     return HttpResponse("This page is not available.")
 
 
+@csrf_exempt
 @login_required(login_url="/auth/login/")
 def delete_saved(request, donation_id):
     if request.user.role != User.USER:
