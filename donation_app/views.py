@@ -7,6 +7,9 @@ from donation_app.forms import DonationForm
 from django.contrib.auth.decorators import login_required
 import datetime, time, json
 from django.core.serializers.json import DjangoJSONEncoder
+from donation_app.models import UserDonation
+from django.views.decorators.csrf import csrf_exempt
+from organizations_profile.models import ProfileO
 
 def show_donation_page(request, id):
 
@@ -73,6 +76,7 @@ def get_donation_data(request, id):
 
 def get_organization(request, id):
     organization_data = User.objects.filter(id=id)
+    # organization_data = User.objects.all()
     return HttpResponse(
         serializers.serialize("json", organization_data),
         content_type="application/json",
@@ -97,3 +101,42 @@ def get_last_donation(request, id):
         if request.user.role == 1:
             return JsonResponse({"time": request.session.get("last_donation" + str(id), "-")})
     return JsonResponse({"time": None})
+
+
+@csrf_exempt
+def flutter_make_donation(request):
+    body_unicode = request.body.decode('utf-8')
+    data = json.loads(body_unicode)
+
+    # get data needed
+    user = User.objects.get(id=data["user"])
+    donation = Donation.objects.get(id=data["donation"])
+    organization = ProfileO.objects.get(organization=data["organization"])
+
+    # update data
+    user.balance -= data["amount_of_donation"]
+    donation.money_accumulated += data["amount_of_donation"]
+    organization.total_campaign += data["amount_of_donation"]
+    donation.user.balance += data["amount_of_donation"]
+
+    # save updated data
+    user.save()
+    donation.save()
+    organization.save()
+    donation.user.save()
+
+    # add new UserDonation to database
+    UserDonation.objects.create(
+        user = user,
+        organization = donation.user,
+        donation = donation,
+        date = datetime.datetime.now(),
+        amount_of_donation = data["amount_of_donation"]
+    )
+    return JsonResponse({"success": "You've successfully made a donation"}) 
+
+def flutter_donation_creator(request, id): # donation id
+    donation = Donation.objects.get(id=id)
+    return JsonResponse(
+        {"pk": donation.user.pk, "username": donation.user.username}
+    )
