@@ -113,7 +113,7 @@ def login_role_flutter(request):
                     "user_data": {
                         "id": user.id,
                         "username": username,
-                        "role": user.role,
+                        "role": 3 if request.user.is_superuser else user.role,
                         "balance": user.balance,
                     },
                 },
