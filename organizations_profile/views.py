@@ -2,6 +2,7 @@ from datetime import datetime
 from django.http import HttpResponse, JsonResponse
 from django.core import serializers
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 from homepage.models import Donation
 from organizations_profile.models import ProfileO
 from authentication.models import User
@@ -251,3 +252,40 @@ def show_jsonprof(request, id):
         json.dumps(donations_dict, indent=1, cls=DjangoJSONEncoder),
         content_type="application/json",
     )
+
+def show_orgproff(request, id):
+    profiles = User.objects.get(username=id)
+
+    org_profile = ProfileO.objects.get(organization=profiles)
+
+    pro_dict = {
+        "pk": org_profile.pk,
+        "fields": {
+            "organization": org_profile.organization,
+            "withdrawn": org_profile.withdrawn,
+            "total_campaign": org_profile.total_campaign,
+        },
+    }
+
+    return HttpResponse(
+        json.dumps(pro_dict, indent=1, cls=DjangoJSONEncoder),
+        content_type="application/json",
+    )
+
+@csrf_exempt
+def post_orgproff(request, id):
+    body_unicode = request.body.decode('utf-8')
+
+    data = json.loads(body_unicode)
+
+    profiles = list(User.objects.filter(username=id))
+
+    for i in profiles:
+        profile = i
+    org_profile = ProfileO.objects.filter(organization=profile)
+
+    profile.withdrawn += data["amount_of_withdrawn"]
+
+    profile.save()
+
+    return JsonResponse({"success": "You've successfully made a withdrawal"})
