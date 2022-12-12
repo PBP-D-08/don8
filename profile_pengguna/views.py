@@ -91,3 +91,19 @@ def show_json_balance(request, username):
 @login_required(login_url="/auth/login/")
 def show_json_amount(request, username):
     return HttpResponse(serializers.serialize("json", ProfileU.objects.filter(user__username=username)), content_type="application/json")
+
+def flutter_top_up(request):
+    body_unicode = request.body.decode('utf-8')
+    data = json.loads(body_unicode)
+    request.user.balance += data["amount"]
+
+def flutter_history(request, id):
+    history = UserDonation.objects.get(id=id)
+    return JsonResponse(
+        {"pk": history.donation.pk,
+        "image": history.donation.image_url,
+        "organization": history.organization.username,
+        "date": history.date,
+        "amount": history.amount_of_donation
+        }
+    )

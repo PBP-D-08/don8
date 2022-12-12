@@ -139,3 +139,9 @@ def flutter_donation_creator(request, id): # donation id
     return JsonResponse(
         {"pk": donation.user.pk, "username": donation.user.username}
     )
+
+def get_user_donations(request):
+    user_donations = UserDonation.objects.all()
+    return HttpResponse(
+        serializers.serialize("json", user_donations), content_type="application/json"
+    )
