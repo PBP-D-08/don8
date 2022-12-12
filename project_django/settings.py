@@ -41,12 +41,13 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "homepage",
     "authentication",
-    'donation_app',
+    "donation_app",
     "saved",
     "organizations_profile",
     "supportmsg",
-    'profile_pengguna',
-    "leaderboard"
+    "profile_pengguna",
+    "leaderboard",
+    "corsheaders",
 ]
 
 AUTH_USER_MODEL = "authentication.User"
@@ -60,6 +61,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = "project_django.urls"
@@ -151,3 +153,14 @@ for directory in [*STATICFILES_DIRS, STATIC_ROOT]:
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+CSRF_TRUSTED_ORIGINS = ["https://*.up.railway.app", "https://*.127.0.0.1"]
+
+
+# pbp_django_auth: ^0.2.3
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = "None"
+SESSION_COOKIE_SAMESITE = "None"

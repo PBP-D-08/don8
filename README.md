@@ -7,7 +7,7 @@
 - **Mariana Salma Saraswati** - 2106702516
 - **Wedens Elma Malau** - 2106751165
   
-Tautan aplikasi Heroku: https://don8-proyek-ts.herokuapp.com/
+Tautan aplikasi Heroku: https://don8-proyek-ts.up.railway.app/
 
 ## Cerita aplikasi yang diajukan serta manfaatnya
 **Don8** merupakan sebuah platform donasi online yang menghubungkan donatur dengan organisasi, dimana organisasi dapat mendaftarkan kegiatan penggalangan dana. Platform donasi memberikan peluang bagi organisasi nonprofit untuk menggalang dana dan masyarakat umum untuk melakukan donasi.
