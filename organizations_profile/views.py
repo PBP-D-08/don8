@@ -6,6 +6,9 @@ from homepage.models import Donation
 from organizations_profile.models import ProfileO
 from authentication.models import User
 from organizations_profile.forms import WithdrawForm
+import json
+from django.core.serializers.json import DjangoJSONEncoder
+
 
 
 
@@ -105,4 +108,146 @@ def show_jsonpro(request, id):
 
     return HttpResponse(
         serializers.serialize("json", donations), content_type="application/json"
+    )
+
+def show_jsonf(request, id):
+    profile = list(User.objects.filter(username=id))
+    for i in profile:
+        profile = i
+    donations = Donation.objects.filter(user=profile)
+    donations_dict = []
+    for d in donations:
+        donations_dict.append(
+            {
+                "pk": d.pk,
+                "fields": {
+                    "title": d.title,
+                    "description": d.description,
+                    "date_expired": d.date_expired,
+                    "image_url": d.image_url,
+                    "date_created": d.date_created,
+                    "money_needed": d.money_needed,
+                    "money_accumulated": d.money_accumulated,
+                    "is_saved": d.saved.filter(
+                        user__username=request.user.username
+                    ).exists(),
+                    "curr_role": request.user.role
+                    if request.user.is_authenticated
+                    else None,
+                },
+            }
+        )
+    return HttpResponse(
+        json.dumps(donations_dict, indent=1, cls=DjangoJSONEncoder),
+        content_type="application/json",
+    )
+
+def show_jsoncompf(request, id):
+    profile = list(User.objects.filter(username=id))
+    for i in profile:
+        profile = i
+    donation = Donation.objects.filter(user=profile)
+    donations = []
+    for i in donation:
+        if i.money_accumulated >= i.money_needed:
+            donations.append(i)
+    donations_dict = []
+    for d in donations:
+        donations_dict.append(
+            {
+                "pk": d.pk,
+                "fields": {
+                    "title": d.title,
+                    "description": d.description,
+                    "date_expired": d.date_expired,
+                    "image_url": d.image_url,
+                    "date_created": d.date_created,
+                    "money_needed": d.money_needed,
+                    "money_accumulated": d.money_accumulated,
+                    "is_saved": d.saved.filter(
+                        user__username=request.user.username
+                    ).exists(),
+                    "curr_role": request.user.role
+                    if request.user.is_authenticated
+                    else None,
+                },
+            }
+        )
+    return HttpResponse(
+        json.dumps(donations_dict, indent=1, cls=DjangoJSONEncoder),
+        content_type="application/json",
+    )
+
+def show_jsonexpf(request, id):
+    profile = list(User.objects.filter(username=id))
+    for i in profile:
+        profile = i
+    donation = Donation.objects.filter(user=profile)
+    donations =[]
+    for i in donation:
+        if i.date_expired < datetime.now().date():
+            donations.append(i)
+
+    donations_dict = []
+    for d in donations:
+        donations_dict.append(
+            {
+                "pk": d.pk,
+                "fields": {
+                    "title": d.title,
+                    "description": d.description,
+                    "date_expired": d.date_expired,
+                    "image_url": d.image_url,
+                    "date_created": d.date_created,
+                    "money_needed": d.money_needed,
+                    "money_accumulated": d.money_accumulated,
+                    "is_saved": d.saved.filter(
+                        user__username=request.user.username
+                    ).exists(),
+                    "curr_role": request.user.role
+                    if request.user.is_authenticated
+                    else None,
+                },
+            }
+        )
+    return HttpResponse(
+        json.dumps(donations_dict, indent=1, cls=DjangoJSONEncoder),
+        content_type="application/json",
+    )
+
+def show_jsonprof(request, id):
+    profile = list(User.objects.filter(username=id))
+    for i in profile:
+        profile = i
+    donation = Donation.objects.filter(user=profile)
+    donations = []
+    for i in donation:
+        if i.date_expired > datetime.now().date():
+            donations.append(i)
+
+    donations_dict = []
+    for d in donations:
+        donations_dict.append(
+            {
+                "pk": d.pk,
+                "fields": {
+                    "title": d.title,
+                    "description": d.description,
+                    "date_expired": d.date_expired,
+                    "image_url": d.image_url,
+                    "date_created": d.date_created,
+                    "money_needed": d.money_needed,
+                    "money_accumulated": d.money_accumulated,
+                    "is_saved": d.saved.filter(
+                        user__username=request.user.username
+                    ).exists(),
+                    "curr_role": request.user.role
+                    if request.user.is_authenticated
+                    else None,
+                },
+            }
+        )
+    return HttpResponse(
+        json.dumps(donations_dict, indent=1, cls=DjangoJSONEncoder),
+        content_type="application/json",
     )
