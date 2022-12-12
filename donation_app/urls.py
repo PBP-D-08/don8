@@ -1,5 +1,5 @@
 from django.urls import path
-from donation_app.views import show_donation_page, make_donation, show_json, get_donation_data, get_organization, check_user, get_current_date, get_last_donation, flutter_make_donation, flutter_donation_creator
+from donation_app.views import show_donation_page, make_donation, show_json, get_donation_data, get_organization, check_user, get_current_date, get_last_donation, flutter_make_donation, flutter_donation_creator, get_user_donations
 
 app_name = 'donation_app'
 
@@ -14,4 +14,5 @@ urlpatterns = [
     path('get-last-donation/<int:id>/', get_last_donation, name='get_last_donation'),
     path('flutter-make-donation/', flutter_make_donation, name='flutter_make_donation'),
     path('flutter-donation-creator/<int:id>/', flutter_donation_creator, name = "flutter_donation_creator"),
+    path('get-user-donations/', get_user_donations, name = "get_user_donations"),
 ]
