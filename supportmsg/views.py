@@ -1,10 +1,11 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.core import serializers
 from supportmsg.models import Post
 from homepage.models import Donation
 from supportmsg.forms import PostForm
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 import json
 from django.core.serializers.json import DjangoJSONEncoder
 
@@ -52,7 +53,7 @@ def show_json(request,filter):
     res.sort(key=lambda count :count.get("fields").get("likes_count"),reverse=True)
     return HttpResponse(json.dumps(res, indent=1, cls=DjangoJSONEncoder),content_type="application/json")
     # return HttpResponse(serializers.serialize("json", data_post), content_type="application/json")
-
+@csrf_exempt
 @login_required(login_url="/auth/login/")
 def add_message(request):
     form = PostForm(request.POST)
@@ -67,6 +68,25 @@ def add_message(request):
         return HttpResponse(serializers.serialize("json", [post]), content_type="application/json")
     return HttpResponse(content_type="application/json")
 
+@csrf_exempt
+@login_required(login_url="/auth/login/")
+def add_message_flutter(request):
+    form = PostForm(request.POST)
+    if request.method == "POST" and form.is_valid():
+        post = Post(
+            author=request.user,
+            author_name=request.user.username,
+            donation_name = request.POST["donation-name"],
+            message=request.POST["message"],
+        )
+        post.save()
+        return JsonResponse({"status": True,"message": "Post successfully Created",},status=200,)
+
+    return JsonResponse({"status": False,"message": "Failed To Post",},status=400,)
+    
+
+
+@csrf_exempt
 @login_required(login_url="/auth/login/")
 def like_post(request):
     if request.method == "POST":
@@ -82,3 +102,29 @@ def like_post(request):
         return HttpResponse(serializers.serialize("json", [post]), content_type="application/json")
 
     return HttpResponse("Invalid", status_code=405)
+
+@csrf_exempt
+@login_required(login_url="/auth/login/")
+def like_post_flutter(request):
+    if request.method == "POST":
+        id = request.POST.get("post_id")
+        post = Post.objects.filter(pk=id)[0]
+        if not post.likes.filter(pk=request.user.pk).exists():
+            post.likes.add(request.user)
+            post.save()
+        else:
+            post.likes.remove(request.user)
+            post.save()
+
+        return JsonResponse(
+                {
+                    "status": True,
+                    "message": "Post successfully Liked",
+                },
+                status=200,)
+
+    return JsonResponse({
+                    "status": False,
+                    "message": "Failed",
+                },
+                status=400,)
