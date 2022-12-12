@@ -254,23 +254,11 @@ def show_jsonprof(request, id):
     )
 
 def show_orgproff(request, id):
-    profiles = User.objects.get(username=id)
-
-    org_profile = ProfileO.objects.get(organization=profiles)
-
-    pro_dict = {
-        "pk": org_profile.pk,
-        "fields": {
-            "organization": org_profile.organization,
-            "withdrawn": org_profile.withdrawn,
-            "total_campaign": org_profile.total_campaign,
-        },
-    }
-
+    profile = User.objects.filter(username=id)
+    data = ProfileO.objects.filter(organization=profile[0])
     return HttpResponse(
-        json.dumps(pro_dict, indent=1, cls=DjangoJSONEncoder),
-        content_type="application/json",
-    )
+        serializers.serialize("json", data),
+        content_type="application/json",)
 
 @csrf_exempt
 def post_orgproff(request, id):

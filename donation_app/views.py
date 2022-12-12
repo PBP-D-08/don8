@@ -116,7 +116,6 @@ def flutter_make_donation(request):
     # update data
     user.balance -= data["amount_of_donation"]
     donation.money_accumulated += data["amount_of_donation"]
-    organization.total_campaign += data["amount_of_donation"]
     donation.user.balance += data["amount_of_donation"]
 
     # save updated data
